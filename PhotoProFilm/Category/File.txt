@@ -1,0 +1,27 @@
+switch Screen(rawValue: value) {
+case .setting:
+    SettingsView(path: $path)
+        .navigationBarBackButtonHidden()
+case .login:
+    LoginView(path: $path, appState: appState)
+        .navigationBarBackButtonHidden()
+case .category:
+    CategoryImageView(path: $path, actionSettingView: {
+        path.append("Setting")
+    })
+    .navigationBarBackButtonHidden()
+case .choosePicker:
+    ChooseImageView(path: $path)
+        .navigationBarBackButtonHidden()
+case .personalInfo:
+    PersonalInfoView(path: $path)
+        .navigationBarBackButtonHidden()
+case .aboutUs:
+    AboutUs()
+        .navigationBarBackButtonHidden()
+case .privacy:
+    Privacy()
+        .navigationBarBackButtonHidden()
+case .unknown:
+    Text("Unknown destination")
+}

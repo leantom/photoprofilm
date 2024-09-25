@@ -8,17 +8,21 @@
 import SwiftUI
 import NavigationTransitions
 import AuthenticationServices
+import SDWebImageSwiftUI
 
 struct LoginView: View {
     var loginViewModel = LoginViewModel.shared
     @State private var showSignInWithAppleSheet = false
-    @State private var isLogined = false
+    
     @State private var isShowComingSoon = false
     let appleSignInHandler = AppleSignInHandler()
     @State var currentNonce: String = ""
+    @Binding var path: NavigationPath
+    @State var isLoading = false
+    @ObservedObject var appState: AppState
     
     var body: some View {
-        NavigationStack {
+        ZStack {
             VStack(spacing: 20) {
                 Spacer()
                 
@@ -52,65 +56,87 @@ struct LoginView: View {
                         print("Continue with Apple")
                         self.performAppleSignIn()
                     })
-                    SocialLoginButton(imageName: "moon.dust.fill", text: "Continue with Twitter", color: Color(red: 0.122, green: 0.621, blue: 0.943), actionChooseMethod: {
-                        print("Continue with Twitter")
-                        isShowComingSoon.toggle()
-                    })
+    //                    SocialLoginButton(imageName: "moon.dust.fill", text: "Continue with Twitter", color: Color(red: 0.122, green: 0.621, blue: 0.943), actionChooseMethod: {
+    //                        print("Continue with Twitter")
+    //                        isShowComingSoon.toggle()
+    //                    })
                     SocialLoginButton(imageName: "cloud.rain.fill", text: "Continue with Anonymous", color: Color(red: 0.122, green: 0.621, blue: 0.943), actionChooseMethod: {
                         print("Continue with Anonymous")
+                        Task {
+                            isLoading.toggle()
+                            await loginViewModel.signinWithAnynomous()
+                            isLoading.toggle()
+                            path.append("category")
+                            appState.isLogined = AppSetting.checkLogined()
+                        }
                     })
                 }
                 .padding(.horizontal)
                 
-                // Sign in with Password Button
-                Button(action: {
-                    // Sign in with password action
-                }) {
-                    Text("Sign in with password")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.purple)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .fontWidth(.condensed)
-                }
-                .padding(.horizontal)
-                .padding(.top, 20)
-                
-                // Sign up Text
-                HStack {
-                    Text("Don’t have an account?")
-                    Button(action: {
-                        // Sign up action
-                    }) {
-                        Text("Sign up")
-                            .foregroundColor(.myPrimary)
-                            .fontWidth(.condensed)
-                    }
-                }
-                .font(.footnote)
-                .padding(.bottom)
+//                // Sign in with Password Button
+//                Button(action: {
+//                    // Sign in with password action
+//                }) {
+//                    Text("Sign in with password")
+//                        .frame(maxWidth: .infinity)
+//                        .padding()
+//                        .background(Color.purple)
+//                        .foregroundColor(.white)
+//                        .cornerRadius(10)
+//                        .fontWidth(.condensed)
+//                }
+//                .padding(.horizontal)
+//                .padding(.top, 20)
+//                
+//                // Sign up Text
+//                HStack {
+//                    Text("Don’t have an account?")
+//                    Button(action: {
+//                        // Sign up action
+//                    }) {
+//                        Text("Sign up")
+//                            .foregroundColor(.myPrimary)
+//                            .fontWidth(.condensed)
+//                    }
+//                }
+//                .font(.footnote)
+//                .padding(.bottom)
                 
                 Spacer()
             }
             .padding()
+            
+            if isLoading {
+                if let path = Bundle.main.path(forResource: "loading", ofType: "gif") {
+                    let url = URL(fileURLWithPath: path)
+                    VStack {
+                        WebImage(url: url)
+                            .resizable()
+                            .indicator(.activity)
+                            .scaledToFit()
+                            .frame(width: 64, height: 64)
+                        
+                        Text("Loging...")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .fontWidth(.condensed)
+                    }
+                    .frame(height: 500)
+                    
+                }
+            }
         }
-        .navigationDestination(isPresented: $isLogined) {
-            CategoryImageView()
-                .navigationBarBackButtonHidden()
-        }
-        .navigationDestination(isPresented: $isShowComingSoon) {
-            ComingSoonView()
-                .navigationBarBackButtonHidden()
-        }
-        .navigationTransition(.fade(.cross))
+       
         
     }
     
     private func performGoogleSignIn() {
         Task {
+            isLoading.toggle()
             loginViewModel.signInWithGoogle { result in
-                self.isLogined = result
+                isLoading.toggle()
+                appState.isLogined = AppSetting.checkLogined()
+                path.append("category")
             }
         }
     }
@@ -129,9 +155,15 @@ struct LoginView: View {
             authorizationController.delegate = appleSignInHandler
             authorizationController.presentationContextProvider = appleSignInHandler
             authorizationController.performRequests()
-            
+            isLoading.toggle()
             appleSignInHandler.actionLoginSuccessfully = {
-                isLogined = true
+                print("actionLoginSuccessfully")
+                DispatchQueue.main.async {
+                    isLoading.toggle()
+                    appState.isLogined = AppSetting.checkLogined()
+                    appState.isFirstInstall = AppSetting.checkisFirstLogined()
+                    path.append("category")
+                }
             }
         }
     }
@@ -168,6 +200,3 @@ struct SocialLoginButton: View {
     }
 }
 
-#Preview {
-    LoginView()
-}

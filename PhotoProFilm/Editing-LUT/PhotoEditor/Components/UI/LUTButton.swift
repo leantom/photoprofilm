@@ -19,11 +19,7 @@ struct LUTButton: View {
         let on = shared.lutsCtrl.currentCube == cube.filter.identifier
         
         return Button(action:{
-            if(on){
-                self.editAmong()
-            }else{
-                self.valueChanged()
-            }
+            self.valueChanged()
         }){
             VStack(spacing: 0){
                 Image(uiImage: UIImage(cgImage: cube.cgImage))

@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "165146603-black-and-white-color-abstract-squares-background-web-design-greeting-card-gray-background-vector.jpg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -20,6 +20,7 @@ class AppSetting {
    
     static func setLogined(value: Bool) {
         UserDefaults.standard.set(value, forKey: "isLogined")
+        UserDefaults.standard.set(false, forKey: "isFirstLogined")
     }
     
     

@@ -42,7 +42,7 @@ public class Collection: ObservableObject {
     public func setImageV2(image: CIImage?) {
         self.cubePreviews = []
         guard let cubeSourceCI = image else { return }
-        
+        isDoneFilter = false
         let now = Date()
         let dispatchGroup = DispatchGroup()
         let dispatchQueue = DispatchQueue.global(qos: .userInitiated)

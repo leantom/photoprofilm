@@ -46,6 +46,7 @@ class LutsController : ObservableObject{
     }
     
     private func observeCollections() {
+        cancellables.removeAll()
           for collection in collections {
               collection.$isDoneFilter
                   .receive(on: DispatchQueue.main)

@@ -8,16 +8,18 @@
 import SwiftUI
 import SDWebImageSwiftUI
 import NavigationTransitions
+import GoogleMobileAds
 
 struct CategoryImageView: View {
     @State var listCategory = [
-        FeatureView(imageName: "avatar", title: "Neutral Style", style: .basic),
+        FeatureView(imageName: "avatar", title: "Neutral Style", style: .neutral),
         FeatureView(imageName: "noise", title: "Noise", style: .scene),
         FeatureView(imageName: "contrast_1", title: "Contrast", style: .cinematic),
         FeatureView(imageName: "film", title: "Films", style: .film),
         FeatureView(imageName: "selfie", title: "Selfie", style: .selfie),
-        FeatureView(imageName: "cinematic", title: "Cinematic", style: .film),
-        FeatureView(imageName: "vivid", title: "Vivid", style: .basic)
+        FeatureView(imageName: "cinematic", title: "Cinematic", style: .cinematic),
+        FeatureView(imageName: "vivid", title: "Vivid", style: .basic),
+        FeatureView(imageName: "BW", title: "B&W", style: .BW)
     ]
     
     @State var featureSelected: FeatureView?
@@ -26,32 +28,43 @@ struct CategoryImageView: View {
     @State var user: NewUser?
     
     @State private  var isShowCategory: Bool = false
+    @State private  var isShowPersonalInfo: Bool = false
+    @Binding var path: NavigationPath
+    var actionSettingView:(() -> Void)
+    @State private  var isShowAds: Bool = false
     
     var body: some View {
-        NavigationStack {
+        GeometryReader { geometry in
+            let adSize = GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(geometry.size.width)
             VStack {
                 ScrollView {
                     VStack(alignment: .leading) {
+                       
                         HStack(spacing: 10) {
                             if let filePath = Bundle.main.path(forResource: "icons8-avatar", ofType: "gif") {
                                             let url = URL(fileURLWithPath: filePath)
                                             AnimatedImage(url: url)
                                                 .resizable()
                                                 .scaledToFit()
-                                                
                                                 .frame(width: 40, height: 40)
                                                 
                                         }
                             VStack(alignment: .leading) {
                                 Text("Welcome back 👋")
+                                    .foregroundStyle(.black)
                                     .fontWidth(.condensed)
                                 Text(user?.username ?? "Anonymous")
                                     .font(.headline)
+                                    .foregroundStyle(.black)
                                     .fontWidth(.condensed)
                             }
                             
                         }
                         .padding()
+                        .onTapGesture {
+                            
+                            actionSettingView()
+                        }
                         
                         HStack (alignment: .center){
                             ZStack {
@@ -79,7 +92,10 @@ struct CategoryImageView: View {
                                             withAnimation {
                                                 self.featureSelected = listCategory.first
                                                 self.titleSetected = self.featureSelected?.title ?? "Basic"
-                                                isShowCategory.toggle()
+                                                guard let featureSelected = self.featureSelected else {return}
+                                                AppState.shared.currentStyle = featureSelected.style
+                                                AppState.shared.titleCategory = featureSelected.title
+                                                path.append("ChoosePicker")
                                             }
                                         }) {
                                             Text("Select Photo")
@@ -109,35 +125,52 @@ struct CategoryImageView: View {
                                         print(category.title)
                                         self.featureSelected = category
                                         self.titleSetected = category.title
+                                        AppState.shared.currentStyle = category.style
+                                        AppState.shared.titleCategory = category.title
                                         DataColor.shared.style = category.style
-                                        isShowCategory.toggle()
+                                        path.append(Screen.instruction.rawValue)
+                                        //path.append("ChoosePicker")
                                     }
                             }
                         }
                         .padding()
                     }
+                    
+                }
+                
+                if isShowAds {
+                    BannerView(adSize)
+                      .frame(height: 50)
                 }
             }
             .background(.white)
-        }
-        .navigationDestination(isPresented: $isShowCategory) {
-            if let feature = self.featureSelected {
+            .onAppear(perform: {
+                Task {
+                    self.user = await LoginViewModel.shared.getUserDetail()
+                    do {
+                        staticPaintingStyle = try await getStylePainting()
+                    } catch let err{
+                        print(err.localizedDescription)
+                    }
+                }
+                
+                GoogleMobileAdsConsentManager.shared.gatherConsent { consentError in
+                    if let consentError {
+                        // Consent gathering failed.
+                        print("Error: \(consentError.localizedDescription)")
+                    }
+                    GoogleMobileAdsConsentManager.shared.startGoogleMobileAdsSDK()
+                    self.isShowAds = true
+                }
+
+                // This sample attempts to load ads using consent obtained in the previous session.
+                GoogleMobileAdsConsentManager.shared.startGoogleMobileAdsSDK()
+                
+                
               
-                ChooseImageView(title: $titleSetected, currentStyle: feature.style)
-                    .navigationBarBackButtonHidden()
-            } else {
-                Text("No choose")
-            }
-            
-            
+            })
         }
-        .navigationTransition(.fade(.cross))
-        .onAppear(perform: {
-            Task {
-                self.user = await LoginViewModel.shared.getUserDetail()
-            }
-            
-        })
+        
         
     }
     
@@ -162,12 +195,8 @@ struct FeatureView: View, Identifiable {
                 .fontWidth(.condensed)
                 .multilineTextAlignment(.center)
                 .padding(.top, 4)
+                .foregroundColor(.black)
         }
     }
-}
-
-
-#Preview {
-    CategoryImageView()
 }
 

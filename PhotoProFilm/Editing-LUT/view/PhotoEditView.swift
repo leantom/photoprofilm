@@ -16,6 +16,14 @@ struct PhotoEditView: View {
     @Binding var pickImage:UIImage?
     @EnvironmentObject var shared:PECtl
     @Environment(\.presentationMode) var presentationMode
+    @State var afterImage: UIImage?
+    var controller: PECtl {
+        get {
+            PECtl.shared
+        }
+    }
+    @State private var isExporting = false
+    @State var isExportedDone: Bool = false
     
     var body: some View {
         NavigationView{
@@ -36,19 +44,27 @@ struct PhotoEditView: View {
                         }
                         Spacer()
                         if(shared.previewImage != nil){
-                            NavigationLink(destination: ExportView()){
+                            NavigationLink(destination: ExportChooseSizeView { size in
+                                exportImage(size: size)
+                            }.navigationBarBackButtonHidden()){
                                 Image(systemName: "square.and.arrow.down")
                                     .foregroundColor(.white)
                                     .padding(.horizontal)
                                     .font(.title2)
                                     .padding(.bottom, 5)
                             }
+                            .onAppear {
+                                isExporting = true
+                            }
+                            .onDisappear {
+                                isExporting = false
+                            }
                         } else {
                             ProgressView()
                         }
                     }
                     .zIndex(1)
-                    PhotoEditorView().frame(maxWidth: .infinity, maxHeight: .infinity)
+                    PhotoEditorView(isExportedDone: $isExportedDone).frame(maxWidth: .infinity, maxHeight: .infinity)
                     .zIndex(0)
                 }
             }
@@ -59,8 +75,18 @@ struct PhotoEditView: View {
                     guard let image = pickImage else {
                         return
                     }
-                   
-                    PECtl.shared.setImage(image: image)
+                    
+                    guard resizeAndCompressImage(image: image) != nil  else {
+                        print("Failed to compress image.")
+                        return
+                    }
+                    
+                    guard let newImage = resizeAndCompressImage(image: image) else {return }
+                    
+                    
+                    if !isExporting {
+                        PECtl.shared.setImage(image: newImage)
+                    }
                 }
             })
         }
@@ -70,6 +96,27 @@ struct PhotoEditView: View {
                 ImagePicker(image: self.$pickImage)
             }
         }
+        .onAppear {
+            Task {
+                await  InterstitialViewModel.shared.loadAd()
+            }
+        }
+    }
+    
+    
+    func exportImage(size: CGSize) {
+        
+        self.afterImage = self.controller.editState.makeRenderer().render(resolution: .full)
+        
+        guard let originalImage = self.afterImage,
+        let resizedImage = originalImage.resizeImage(targetSize: size) else { return }
+        
+        saveImageToPhotos(image: resizedImage)
+        isExportedDone = true
+    }
+    
+    func saveImageToPhotos(image: UIImage) {
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
     }
     
     

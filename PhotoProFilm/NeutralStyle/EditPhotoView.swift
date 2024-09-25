@@ -31,34 +31,34 @@ struct EditPhotoView: View {
         }
     }
     @State var ml : ImageClassifier?
-    
+    @State private var isOriginal = true
     var body: some View {
-        NavigationStack {
-            ZStack {
-                VStack {
-                    HStack {
-                        Button(action: {
-                            // Action for back button
-                            dismiss()
-                        }) {
-                            Image(systemName: "arrow.left")
-                                .foregroundColor(.black)
-                        }
-                        Spacer()
-                        Text("Edit Photo")
-                            .font(.headline)
+        ZStack {
+            VStack {
+                HStack {
+                    Button(action: {
+                        // Action for back button
+                        dismiss()
+                    }) {
+                        Image(systemName: "arrow.left")
                             .foregroundColor(.black)
-                            .fontWidth(.condensed)
-                        Spacer()
-                        Button(action: {
-                            // Action for save button
-                            self.isShowSaveSheet.toggle()
-                        }) {
-                            Image(systemName: "square.and.arrow.up")
-                                .foregroundColor(.black)
-                        }
                     }
-                    .padding()
+                    Spacer()
+                    Text("Edit Photo")
+                        .font(.headline)
+                        .foregroundColor(.black)
+                        .fontWidth(.condensed)
+                    Spacer()
+                    Button(action: {
+                        // Action for save button
+                        self.isShowSaveSheet.toggle()
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundColor(.black)
+                    }
+                }
+                .padding()
+                if isOriginal == false {
                     switch currentProcess {
                     case .None:
                         if let displayedImage = image {
@@ -76,6 +76,11 @@ struct EditPhotoView: View {
                                     .indicator(.activity)
                                     .scaledToFit()
                                     .frame(width: 64, height: 64)
+                                
+                                Text("Analyzing Neutral Style Model, Wait a second ...")
+                                    .font(.headline)
+                                    .foregroundColor(.black)
+                                    .fontWidth(.condensed)
                             }
                             .frame(height: 500)
                             
@@ -88,68 +93,92 @@ struct EditPhotoView: View {
                                 .frame(width: UIScreen.main.bounds.width)
                         }
                     }
-                    
-                    Spacer()
-                    
-                    ScrollView (.horizontal, showsIndicators: false){
-                        HStack {
-                                    ActionButton(imageName: "flame", title: "High Saturation", isSelected: currentStyle == .HighSatuation) {
-                                        if currentStyle == .HighSatuation {return}
-                                        self.currentStyle = .HighSatuation
-                                    }
-                                    ActionButton(imageName: "wand.and.stars", title: "Vivid", isSelected: currentStyle == .Vivid) {
-                                        if currentStyle == .Vivid {return}
-                                        self.currentStyle = .Vivid
-                                    }
-                                    ActionButton(imageName: "wind.snow", title: "Film", isSelected: currentStyle == .Film) {
-                                        if currentStyle == .Film {return}
-                                        self.currentStyle = .Film
-                                    }
-                                    ActionButton(imageName: "dial.high", title: "Sketch", isSelected: currentStyle == .Sketch) {
-                                        if currentStyle == .Sketch {return}
-                                        self.currentStyle = .Sketch
-                                    }
-                                    ActionButton(imageName: "snowflake", title: "Renaissance", isSelected: currentStyle == .Renaissance) {
-                                        if currentStyle == .Renaissance {return}
-                                        self.currentStyle = .Renaissance
-                                    }
-                                    ActionButton(imageName: "laurel.leading", title: "Monochrome", isSelected: currentStyle == .Vintage) {
-                                        if currentStyle == .Vintage {return}
-                                        self.currentStyle = .Vintage
-                                    }
-                                }
-                        .padding()
-                        .background(Color.white)
+                } else {
+                    if let displayedImage = image {
+                        Image(uiImage: displayedImage)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: UIScreen.main.bounds.width)
                     }
                 }
-                .background(Color.gray.opacity(0.1))
-                if isExportedDone {
-                                Button(action: {
-                                    // Action for the button
-                                }) {
-                                    HStack {
-                                        Image(systemName: "checkmark")
-                                            .foregroundColor(.white)
-                                        Text("Saved to gallery")
-                                            .foregroundColor(.white)
-                                            .font(.system(size: 16, weight: .semibold))
-                                    }
-                                    .padding()
-                                    .background(Color.purple)
-                                    .cornerRadius(12)
-                                    .shadow(radius: 5)
+                
+                
+                Spacer()
+                VStack {
+                    Toggle(isOn: $isOriginal) {
+                        Text("")
+                    }
+                    .toggleStyle(SwitchToggleStyle()) // This applies the switch style
+                    
+                }
+                .padding(.all, 5)
+                .padding(.trailing, 10)
+                ScrollView (.horizontal, showsIndicators: false){
+                    HStack {
+                        ActionButton(imageName: "flame", title: "High Saturation", isSelected: currentStyle == .HighSatuation, isProcessing: currentProcess) {
+                                    if currentStyle == .HighSatuation {return}
+                                    self.currentStyle = .HighSatuation
+                                    isOriginal = false
                                 }
-                                .transition(.opacity) // Add a transition for animation
-                                .onAppear {
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                        withAnimation {
-                                            self.isExportedDone.toggle()
-                                        }
+                                ActionButton(imageName: "wand.and.stars", title: "Vivid", isSelected: currentStyle == .Vivid, isProcessing: currentProcess) {
+                                    if currentStyle == .Vivid {return}
+                                    self.currentStyle = .Vivid
+                                    isOriginal = false
+                                }
+                                ActionButton(imageName: "wind.snow", title: "Film", isSelected: currentStyle == .Film, isProcessing: currentProcess) {
+                                    if currentStyle == .Film {return}
+                                    self.currentStyle = .Film
+                                    isOriginal = false
+                                }
+                                ActionButton(imageName: "dial.high", title: "Sketch", isSelected: currentStyle == .Sketch, isProcessing: currentProcess) {
+                                    if currentStyle == .Sketch {return}
+                                    self.currentStyle = .Sketch
+                                    isOriginal = false
+                                }
+                                ActionButton(imageName: "snowflake", title: "Renaissance", isSelected: currentStyle == .Renaissance, isProcessing: currentProcess) {
+                                    if currentStyle == .Renaissance {return}
+                                    self.currentStyle = .Renaissance
+                                    isOriginal = false
+                                }
+                                ActionButton(imageName: "laurel.leading", title: "Monochrome", isSelected: currentStyle == .Vintage, isProcessing: currentProcess) {
+                                    if currentStyle == .Vintage {return}
+                                    self.currentStyle = .Vintage
+                                    isOriginal = false
+                                }
+                            }
+                    .padding()
+                    .background(Color.white)
+                    .frame(width: UIScreen.main.bounds.width)
+                }
+                .frame(width: UIScreen.main.bounds.width)
+                .background(Color.white)
+            }
+            .background(Color.gray.opacity(0.1))
+            if isExportedDone {
+                            Button(action: {
+                                // Action for the button
+                            }) {
+                                HStack {
+                                    Image(systemName: "checkmark")
+                                        .foregroundColor(.white)
+                                    Text("Saved to gallery")
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 16, weight: .semibold))
+                                }
+                                .padding()
+                                .background(Color.purple)
+                                .cornerRadius(12)
+                                .shadow(radius: 5)
+                            }
+                            .transition(.opacity) // Add a transition for animation
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    withAnimation {
+                                        self.isExportedDone.toggle()
                                     }
                                 }
                             }
-                
-            }
+                        }
             
         }
         .sheet(isPresented: $isShowSaveSheet) {
@@ -171,7 +200,7 @@ struct EditPhotoView: View {
         if self.ml == nil {
             self.ml = ImageClassifier()
         }
-        DispatchQueue.global(qos: .utility).async {
+        DispatchQueue.global(qos: .userInitiated).async {
             guard let image = self.image else { return }
             guard let ml = self.ml else { return }
             
@@ -203,18 +232,31 @@ struct EditPhotoView: View {
                 self.isDoneProcess.toggle()
                 self.ml?.releaseMemory()
                 self.ml = nil
+                Task {
+                    await  InterstitialViewModel.shared.loadAd()
+                }
             }
         }
     }
     
     func exportImage(size: CGSize) {
         
-        guard let originalImage = self.afterImage else { return }
-        let resizedImage = resizeImage(image: originalImage, targetSize: size)
+        guard let originalImage = self.afterImage,
+        let resizedImage = originalImage.resizeImage(targetSize: size) else { return }
+        
         saveImageToPhotos(image: resizedImage)
     }
-    func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
-        let size = image.size
+    
+    
+    func saveImageToPhotos(image: UIImage) {
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+    }
+    
+}
+
+extension UIImage {
+    func resizeImage(targetSize: CGSize) -> UIImage? {
+        let size = self.size
         
         let widthRatio  = targetSize.width  / size.width
         let heightRatio = targetSize.height / size.height
@@ -229,17 +271,18 @@ struct EditPhotoView: View {
         let rect = CGRect(origin: .zero, size: newSize)
         
         UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
-        image.draw(in: rect)
+        self.draw(in: rect)
         
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return newImage!
+        return newImage
     }
     
-    func saveImageToPhotos(image: UIImage) {
-        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-    }
+    func convertToBase64String() -> String? {
+        guard let imageData = self.jpegData(compressionQuality: 0.8) else { return nil }
+            return imageData.base64EncodedString()
+        }
     
 }
 
@@ -247,7 +290,10 @@ struct ActionButton: View {
     let imageName: String
     let title: String
     var isSelected: Bool
+    var isProcessing:ProcessImage
     var action: (() -> Void)
+    
+    
     var body: some View {
         VStack {
             Image(systemName: imageName )
@@ -262,6 +308,7 @@ struct ActionButton: View {
         }
         .onTapGesture {
             withAnimation {
+                if isProcessing == .Processing {return}
                 action()
             }
         }

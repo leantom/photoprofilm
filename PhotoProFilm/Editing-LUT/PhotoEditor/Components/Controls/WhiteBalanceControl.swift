@@ -13,7 +13,7 @@ struct WhiteBalanceControl: View {
     
     @State var temperatureIntensity:Double = 0
     
-    @State var tintIntensity:Double = 0
+    @State var tintIntensity:Double = 50
     
     var body: some View {
         
@@ -35,7 +35,7 @@ struct WhiteBalanceControl: View {
                 self.valueChanged()
         }
         )
-        return VStack(spacing: 24){
+        return VStack(spacing: 24) {
             FilterSlider(value: temperature, range: (FilterWhiteBalance.range.min, FilterWhiteBalance.range.max), lable: "Temperature", defaultValue: 0, spacing: 8)
             
             FilterSlider(value: tint, range: (FilterWhiteBalance.range.min, FilterWhiteBalance.range.max),lable: "Tint", defaultValue: 0, spacing: 8)

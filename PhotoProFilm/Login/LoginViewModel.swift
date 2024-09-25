@@ -92,12 +92,16 @@ class AppleSignInHandler: NSObject, ASAuthorizationControllerDelegate, ASAuthori
                 if let result = authResult {
                     Task {
                         await LoginViewModel.shared.createUser(user: result.user, provider: "apple")
-                        if let actionLoginSuccessfully = actionLoginSuccessfully {
-                            actionLoginSuccessfully()
-                        }
+                        LoginViewModel.shared.user = result.user
                         AppSetting.setLogined(value: true)
+                        actionLoginSuccessfully?()
                     }
                     
+                } else {
+                    Task {
+                        await LoginViewModel.shared.signinWithAnynomous()
+                        actionLoginSuccessfully?()
+                    }
                 }
                 
             }
@@ -198,10 +202,27 @@ class LoginViewModel: NSObject, ObservableObject {
             }
         }
         
-        let newUser = NewUser(username: username, email: user.email ?? "\(username)@walldota2.com", providers: provider, created_at: now, last_login_at: now, userid: user.uid)
+        let newUser = NewUser(username: username, email: user.email ?? "\(username)@profilm.com", providers: provider, created_at: now, last_login_at: now, userid: user.uid, avatar: randomAvatar())
         
         LoginViewModel.shared.userLogin = newUser
         await UserViewModel.shared.createUser(user: newUser)
+    }
+    
+    func randomAvatar() -> String {
+        var listImage = ["avatar", "BW", "cinematic", "contrast_1", "film", "noise", "selfie", "vivid"]
+        var images: [UIImage] = []
+        for image_name in listImage {
+            if let img = UIImage(named: image_name) {
+                images.append(img)
+            }
+            
+        }
+        if let randomImageName = images.randomElement(),
+           let downsizedImage = randomImageName.resizeImage(targetSize: CGSize(width: 100, height: 100)),
+           let base64String = downsizedImage.convertToBase64String() {
+           return base64String
+        }
+        return ""
     }
     
     func addDevice() async {
@@ -265,6 +286,32 @@ class LoginViewModel: NSObject, ObservableObject {
         return isValid
         
     }
+    
+    func updateAvatar(avatar: String) async  {
+        let db = Firestore.firestore()
+        
+        // check username exist yet
+        guard let user = LoginViewModel.shared.userLogin else {return }
+        
+        let collectionRef = db.collection("users").whereField("userid", isEqualTo: user.userid)
+        
+        do {
+            let snapshot = try await collectionRef.getDocuments()
+            let query = snapshot.documents.first
+            
+            try await query?.reference.updateData(["avatar": avatar])
+            LoginViewModel.shared.userLogin =  await getUserDetail()
+            return
+        } catch let err{
+            print(err.localizedDescription)
+            return 
+        }
+        
+        
+    }
+    
+    
+    
     //MARK: -- getUserDetail
     
     func getUserDetail() async -> NewUser? {
@@ -276,7 +323,10 @@ class LoginViewModel: NSObject, ObservableObject {
             if let result = results.documents.first {
                 let user = try result.data(as: NewUser.self)
                 //MARK: update last login time
-                LoginViewModel.shared.userLogin = user
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    LoginViewModel .shared.userLogin = user
+                }
+                
                 return user
                 
             }
@@ -291,6 +341,11 @@ class LoginViewModel: NSObject, ObservableObject {
     
     func signinWithAnynomous() async {
         do {
+            
+            if let user = Auth.auth().currentUser {
+                AppSetting.setLogined(value: true)
+                return
+            }
             let result = try await Auth.auth().signInAnonymously()
             self.user = result.user
             print(user?.uid ?? "")
@@ -300,7 +355,7 @@ class LoginViewModel: NSObject, ObservableObject {
             let suffix = "\(now)".suffix(6)
             let username = "anonymous\(suffix)"
             
-            let newUser = NewUser(username: username, email: "\(username)@walldota2.com", providers: "anonymous", created_at: now, last_login_at: now, userid: result.user.uid)
+            let newUser = NewUser(username: username, email: "\(username)@profilm.com", providers: "anonymous", created_at: now, last_login_at: now, userid: result.user.uid, avatar: randomAvatar())
             LoginViewModel.shared.userLogin = newUser
             await UserViewModel.shared.createUser(user: newUser)
         } catch let err{
@@ -326,7 +381,11 @@ class LoginViewModel: NSObject, ObservableObject {
         } catch let err{
             print(err.localizedDescription)
         }
-        
+    }
+    
+    func logOut() {
+        AppSetting.setLogined(value: false)
+        AppSetting.setFirstLogined(value: true)
     }
     
     

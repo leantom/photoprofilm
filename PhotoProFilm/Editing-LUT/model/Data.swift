@@ -11,11 +11,30 @@ import SwiftUI
 import PixelEnginePackage
 
 public enum ColorStyle: String {
-    case basic = "Basic"
+    case basic = "Vivid"
     case cinematic = "Cinematic"
     case film = "Film"
     case selfie = "Selfie"
     case scene = "Scene"
+    case neutral = "Neutral"
+    case BW = "BW"
+    
+    var description: String {
+            switch self {
+            case .basic, .BW:
+                return "Enhance colors and make the photo more vibrant and lively."
+            case .cinematic:
+                return "Apply a cinematic filter to give the photo a dramatic, movie-like effect."
+            case .film:
+                return "Create a vintage look with classic film tones and textures."
+            case .selfie:
+                return "Optimized for selfies with smooth skin tones and enhanced facial features."
+            case .scene:
+                return "Perfect for capturing landscapes and scenes with balanced exposure and color."
+            case .neutral:
+                return "Keep the photo natural with minimal adjustments for a true-to-life look."
+            }
+        }
 }
 
 enum ColorName: String {
@@ -200,6 +219,19 @@ class DataColor: ObservableObject {
                 tan.cubeInfos.append(cube)
             }
             collectionsSelected.append(tan)
+        case .BW:
+            let tan = Collection(type: .BW, name: "BW", identifier: "BW", cubeInfos: [])
+            for i in 1...6 {
+                let cube = FilterColorCubeInfo(
+                    name: "BW\(i)",
+                    identifier: "BW\(i)",
+                    lutImage: "BW\(i)"
+                )
+                tan.cubeInfos.append(cube)
+            }
+            collectionsSelected.append(tan)
+        case .neutral:
+            break
         }
         
     }

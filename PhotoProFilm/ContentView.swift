@@ -2,6 +2,19 @@ import SwiftUI
 import CoreImage
 import CoreImage.CIFilterBuiltins
 import Firebase
+import NavigationTransitions
+class AppState: ObservableObject {
+    static let shared = AppState()
+    @Published var isLogined: Bool = false
+    @Published var isFirstInstall: Bool = false
+    @Published var titleCategory: String = "Noise"
+    @Published var currentStyle: ColorStyle = .cinematic
+    
+    init() {
+        self.isLogined = AppSetting.checkLogined()
+        self.isFirstInstall = AppSetting.checkisFirstLogined()
+    }
+}
 
 struct ContentView: View {
     @State private var image: Image?
@@ -9,83 +22,63 @@ struct ContentView: View {
     @State private var inputImage: UIImage?
     @State private var isShowPreviewImage = false
     @State var imageDetail: UIImage?
+    @State var isFirstInstall = false
     
+    @StateObject var appState = AppState()
     let context = CIContext()
+    @State private var path = NavigationPath()
     
     var body: some View {
-        NavigationStack {
-            if AppSetting.checkisFirstLogined() {
-                WrapperSplashScreen()
-            } else if AppSetting.checkLogined() && Auth.auth().currentUser != nil {
-                CategoryImageView()
-            } else {
-                LoginView()
+        NavigationStack (path: $path) {
+            VStack {
+                if appState.isFirstInstall {
+                    WrapperSplashScreen(path: $path, appState: appState)
+                } else if appState.isLogined && Auth.auth().currentUser != nil {
+                    CategoryImageView(path: $path, actionSettingView: {
+                        path.append("Setting")
+                    })
+                } else {
+                    LoginView(path: $path, appState: appState)
+                }
+            }.navigationDestination(for: String.self) { value in
+                switch Screen(rawValue: value) {
+                case .setting:
+                    SettingsView(path: $path)
+                        .navigationBarBackButtonHidden()
+                case .login:
+                    LoginView(path: $path, appState: appState)
+                        .navigationBarBackButtonHidden()
+                case .category:
+                    CategoryImageView(path: $path, actionSettingView: {
+                        path.append("Setting")
+                    })
+                    .navigationBarBackButtonHidden()
+                case .choosePicker:
+                    ChooseImageView(path: $path)
+                        .navigationBarBackButtonHidden()
+                case .personalInfo:
+                    PersonalInfoView(path: $path)
+                        .navigationBarBackButtonHidden()
+                case .aboutUs:
+                    AboutUs()
+                        .navigationBarBackButtonHidden()
+                case .privacy:
+                    Privacy()
+                        .navigationBarBackButtonHidden()
+                case .unknown:
+                    Text("Unknown destination")
+                case .instruction:
+                    InstructionView(path: $path)
+                        .navigationBarBackButtonHidden()
+                }
+            }
+            .navigationTransition(.fade(.cross))
+            .onAppear {
+                appState.isLogined = AppSetting.checkLogined()
+                appState.isFirstInstall = AppSetting.checkisFirstLogined()
             }
         }
-        
     }
-    
-    func loadImage() {
-        guard let inputImage = inputImage else { return }
-        image = Image(uiImage: inputImage)
-    }
-    
-    func applyFilter() {
-        guard let inputImage = inputImage else { return }
-        let beginImage = CIImage(image: inputImage)
-        let filter = CIFilter.photoEffectNoir() // Using a Chrome effect for a film style
-        filter.inputImage = beginImage
-        
-        guard let outputImage = filter.outputImage,
-              let cgimg = context.createCGImage(outputImage, from: outputImage.extent) else { return }
-        
-        let processedImage = UIImage(cgImage: cgimg)
-        image = Image(uiImage: processedImage)
-    }
-    
-    func addSoftNoiseFilter(to inputImage: UIImage) -> UIImage? {
-        // Convert UIImage to CIImage
-        guard let ciInputImage = CIImage(image: inputImage) else {
-            return nil
-        }
-        
-        // Create the noise filter
-        let noiseFilter = CIFilter(name: "CIRandomGenerator")!
-        
-        // Crop the noise image to match the input image size
-        let noiseImage = noiseFilter.outputImage?.cropped(to: ciInputImage.extent)
-        
-        // Reduce the opacity of the noise image
-        let alphaValue: CGFloat = 0.1 // Adjust this value to control the softness of the noise
-        let transparentFilter = CIFilter(name: "CIConstantColorGenerator", parameters: [kCIInputColorKey: CIColor(red: 0, green: 0, blue: 0, alpha: alphaValue)])!
-        let transparentImage = transparentFilter.outputImage?.cropped(to: ciInputImage.extent)
-        let noiseWithOpacity = noiseImage?.applyingFilter("CISourceOverCompositing", parameters: [kCIInputBackgroundImageKey: transparentImage!])
-        
-        // Blend the noise with the original image
-        let blendFilter = CIFilter(name: "CISoftLightBlendMode")!
-        blendFilter.setValue(noiseWithOpacity, forKey: kCIInputImageKey)
-        blendFilter.setValue(ciInputImage, forKey: kCIInputBackgroundImageKey)
-        
-        // Get the output image
-        guard let outputCIImage = blendFilter.outputImage else {
-            return nil
-        }
-        
-        // Convert CIImage to UIImage
-        let context = CIContext(options: nil)
-        if let cgImage = context.createCGImage(outputCIImage, from: outputCIImage.extent) {
-            let finalImage = UIImage(cgImage: cgImage)
-            return finalImage
-        }
-        
-        return nil
-    }
-    
-    
-    
-    
-    
-    
     
     
 }

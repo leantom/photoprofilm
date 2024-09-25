@@ -25,7 +25,8 @@ class UserViewModel {
                                                            "providers": user.providers,
                                                            "created_at": user.created_at,
                                                            "last_login_at": user.last_login_at,
-                                                           "userid": user.userid])
+                                                           "userid": user.userid,
+                                                           "avatar": user.avatar])
                 self.currentUser = Auth.auth().currentUser
             }
         } catch let err{
@@ -57,6 +58,7 @@ struct NewUser: Codable {
     let created_at: Double
     let last_login_at: Double
     let userid: String
+    let avatar: String
 }
 
 struct ItemDownload: Codable {
