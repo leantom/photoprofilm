@@ -7,6 +7,61 @@
 
 import Foundation
 import UIKit
+import FirebaseStorage
+
+func uploadImageToFirebase(image: UIImage, imageName: String, completion: @escaping (Result<String, Error>) -> Void) {
+    // Convert the UIImage to JPEG data with compression quality
+    guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+        completion(.failure(NSError(domain: "ImageConversion", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to convert UIImage to JPEG"])))
+        return
+    }
+    
+    // Create a reference to Firebase Storage
+    let storageRef = Storage.storage().reference().child("images/\(imageName).jpg")
+    
+    // Upload the image data to Firebase Storage
+    let metadata = StorageMetadata()
+    metadata.contentType = "image/jpeg"
+    
+    storageRef.putData(imageData, metadata: metadata) { metadata, error in
+        if let error = error {
+            // Handle error
+            print(error.localizedDescription)
+            completion(.failure(error))
+        } else {
+            // Get the download URL
+            storageRef.downloadURL { url, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                    completion(.failure(error))
+                } else if let downloadURL = url {
+                    // Return the download URL as a string
+                    print(downloadURL)
+                    completion(.success(downloadURL.absoluteString))
+                }
+            }
+        }
+    }
+}
+
+
+extension UIImage{
+    
+    func saveImageToPhotoAlbum(image: UIImage) {
+        UIImageWriteToSavedPhotosAlbum(image, self, #selector(imageSaveCompletion(_:didFinishSavingWithError:contextInfo:)), nil)
+    }
+    
+    // Selector to handle the save result
+    @objc func imageSaveCompletion(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        if let error = error {
+            // Handle the error case
+            print("Error saving image: \(error.localizedDescription)")
+        } else {
+            // Handle the success case
+            print("Image saved successfully!")
+        }
+    }
+}
 
 extension UIImage {
     func resizedImage(newSize: CGSize) -> UIImage? {
@@ -83,6 +138,112 @@ extension UIImage {
         
         return imageData
     }
+}
+
+extension UIImage {
+    func addText(atPoint point: CGPoint, color: UIColor) -> UIImage {
+        let scale = UIScreen.main.scale
+        UIGraphicsBeginImageContextWithOptions(self.size, false, scale)
+        var fontSize = self.size.height * 0.025 // Adjust this proportion as needed
+       
+        let fontCustom = UIFont(name: "calculatrix-7", size: fontSize)
+        
+        let dateFormatter = DateFormatter()
+        
+        // Choose one of the formats above
+        dateFormatter.dateFormat = "dd MMM yyyy, HH:mm"  // Classic print style example
+        let text =  dateFormatter.string(from: Date())
+        // Draw the original image as the base
+        self.draw(in: CGRect(origin: .zero, size: self.size))
+        
+        // Define the text's attributes
+        let textFontAttributes = [
+            NSAttributedString.Key.font: fontCustom,
+            NSAttributedString.Key.foregroundColor: color
+        ]
+        
+        // Calculate the bounding box for the text to ensure it fits well
+        let textSize = text.size(withAttributes: textFontAttributes as [NSAttributedString.Key : Any])
+        
+        // Position text near the bottom with a bit of margin
+        let textRect = CGRect(x: point.x, y: point.y, width: textSize.width, height: textSize.height)
+        
+        // Draw the text onto the image
+        text.draw(in: textRect, withAttributes: textFontAttributes as [NSAttributedString.Key : Any])
+        
+        // Get the new image with the text added
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage ?? self
+    }
+}
+
+func fixImageOrientation(image: UIImage) -> UIImage {
+    if image.imageOrientation == .up {
+        return image // Image is already in correct orientation
+    }
+
+    // Start a graphics context of the correct size
+    UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale)
+    image.draw(in: CGRect(origin: .zero, size: image.size))
+
+    // Create new UIImage from the context
+    let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+
+    return normalizedImage ?? image
+}
+
+func cropImageToAspectRatio(image: UIImage, aspectRatio: AspectRatio) -> UIImage? {
+    // Step 1: Fix the image orientation
+    let rotatedImage = fixImageOrientation(image: image)
+    
+    let originalSize = rotatedImage.size
+    var targetAspectRatio: CGFloat
+    
+    // Define aspect ratios and check orientation
+    switch aspectRatio {
+    case .ratio4_3:
+        targetAspectRatio = 4.0 / 3.0
+    case .ratio9_16:
+        targetAspectRatio = 16.0 / 9.0
+    }
+    
+    // Step 2: Handle portrait or landscape mode
+    let isPortrait = originalSize.height > originalSize.width
+    if isPortrait {
+        // Swap aspect ratio if in portrait
+        targetAspectRatio = 1.0 / targetAspectRatio
+    }
+    
+    // Calculate the target width and height based on the aspect ratio
+    let targetWidth: CGFloat
+    let targetHeight: CGFloat
+    
+    if originalSize.width / originalSize.height > targetAspectRatio {
+        // Image is wider than the target aspect ratio
+        targetHeight = originalSize.height
+        targetWidth = originalSize.height * targetAspectRatio
+    } else {
+        // Image is taller than the target aspect ratio
+        targetWidth = originalSize.width
+        targetHeight = originalSize.width / targetAspectRatio
+    }
+    
+    // Step 3: Calculate the cropping rectangle
+    let x = (originalSize.width - targetWidth) / 2.0
+    let y = (originalSize.height - targetHeight) / 2.0
+    let cropRect = CGRect(x: x, y: y, width: targetWidth, height: targetHeight)
+    
+    // Step 4: Crop the image
+    guard let cgImage = rotatedImage.cgImage?.cropping(to: cropRect) else {
+        return nil
+    }
+    
+    // Step 5: Return the final cropped and oriented image
+    let imageFinal = UIImage(cgImage: cgImage)
+    return imageFinal
 }
 
 func resizeAndCompressImage(image: UIImage, maxSize: CGSize = CGSize(width: 2048, height: 2048), maxFileSizeMB: Int = 3) -> UIImage? {

@@ -153,7 +153,7 @@ struct CategoryImageView: View {
                         print(err.localizedDescription)
                     }
                 }
-                
+#if RELEASE
                 GoogleMobileAdsConsentManager.shared.gatherConsent { consentError in
                     if let consentError {
                         // Consent gathering failed.
@@ -165,9 +165,7 @@ struct CategoryImageView: View {
 
                 // This sample attempts to load ads using consent obtained in the previous session.
                 GoogleMobileAdsConsentManager.shared.startGoogleMobileAdsSDK()
-                
-                
-              
+#endif
             })
         }
         

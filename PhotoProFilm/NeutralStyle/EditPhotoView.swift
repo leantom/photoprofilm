@@ -148,7 +148,6 @@ struct EditPhotoView: View {
                             }
                     .padding()
                     .background(Color.white)
-                    .frame(width: UIScreen.main.bounds.width)
                 }
                 .frame(width: UIScreen.main.bounds.width)
                 .background(Color.white)
@@ -292,7 +291,6 @@ struct ActionButton: View {
     var isSelected: Bool
     var isProcessing:ProcessImage
     var action: (() -> Void)
-    
     
     var body: some View {
         VStack {

@@ -15,6 +15,8 @@ enum Screen: String {
     case aboutUs = "AboutUs"
     case privacy = "Privacy"
     case instruction = "Instruction"
+    case photo = "photo"
+    case savePhoto = "savePhoto"
     case unknown
     
     init(rawValue: String) {
@@ -27,6 +29,8 @@ enum Screen: String {
         case "AboutUs": self = .aboutUs
         case "Privacy": self = .privacy
         case "Instruction": self = .instruction
+        case "photo": self = .photo
+        case "savePhoto": self = .savePhoto
         default: self = .unknown
         }
     }

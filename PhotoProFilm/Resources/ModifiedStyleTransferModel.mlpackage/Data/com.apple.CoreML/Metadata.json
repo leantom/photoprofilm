@@ -1,0 +1,15 @@
+{
+  "MLModelDescriptionKey" : "CatStyle is a machine learning model designed to apply artistic styles to images of cats using neural style transfer techniques. By leveraging convolutional neural networks (CNNs), the model transfers the visual aesthetics of a style image (e.g., a painting) to a target cat image, creating visually appealing and stylized versions of the original cat images. The model is trained using TensorFlow and converted to Core ML format for integration into iOS applications, allowing users to effortlessly transform their cat photos into unique pieces of art.",
+  "MLModelCreatorDefinedKey" : {
+    "Algorithm" : "cnn",
+    "com.apple.coreml.model.preview.type" : "styleTransfer",
+    "com.apple.createml.version" : "14.6.1",
+    "com.apple.coreml.model.preview.params" : "image",
+    "com.apple.createml.app.tag" : "121.4",
+    "Textel Density" : "288",
+    "com.apple.createml.app.version" : "5.0",
+    "Style Strength" : "5"
+  },
+  "MLModelAuthorKey" : "QuangHo",
+  "MLModelLicenseKey" : "MIT"
+}

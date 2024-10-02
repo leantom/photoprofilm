@@ -104,11 +104,12 @@ struct ExportChooseSizeView: View {
         // Increment the counter
         adsShownToday += 1
         UserDefaults.standard.set(adsShownToday, forKey: "adsShownToday")
-        
+#if RELEASE
         // Show the ad
         DispatchQueue.main.async {
             InterstitialViewModel.shared.showAd()
         }
+#endif
     }
 }
 

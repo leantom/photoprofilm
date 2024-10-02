@@ -49,9 +49,9 @@ struct LoginView: View {
                 
                 // Social Media Login Buttons
                 VStack(spacing: 10) {
-                    SocialLoginButton(imageName: "sun.snow.fill", text: "Continue with Google", color: Color(hue: 0.05, saturation: 0.807, brightness: 0.89), actionChooseMethod: {
+                    SocialLoginButton(imageName: "gg_icon", text: "Continue with Google", color: Color(hue: 0.05, saturation: 0.807, brightness: 0.89), actionChooseMethod: {
                         self.performGoogleSignIn()
-                    })
+                    }, isSystemImage: false)
                     SocialLoginButton(imageName: "applelogo", text: "Continue with Apple", color: .black, actionChooseMethod: {
                         print("Continue with Apple")
                         self.performAppleSignIn()
@@ -66,7 +66,7 @@ struct LoginView: View {
                             isLoading.toggle()
                             await loginViewModel.signinWithAnynomous()
                             isLoading.toggle()
-                            path.append("category")
+                            path.append("photo")
                             appState.isLogined = AppSetting.checkLogined()
                         }
                     })
@@ -136,7 +136,7 @@ struct LoginView: View {
             loginViewModel.signInWithGoogle { result in
                 isLoading.toggle()
                 appState.isLogined = AppSetting.checkLogined()
-                path.append("category")
+                path.append("photo")
             }
         }
     }
@@ -162,7 +162,7 @@ struct LoginView: View {
                     isLoading.toggle()
                     appState.isLogined = AppSetting.checkLogined()
                     appState.isFirstInstall = AppSetting.checkisFirstLogined()
-                    path.append("category")
+                    path.append("photo")
                 }
             }
         }
@@ -175,15 +175,25 @@ struct SocialLoginButton: View {
     var text: String
     var color: Color
     var actionChooseMethod: (() -> Void)
+    var isSystemImage: Bool = true
+    
     var body: some View {
         Button(action: {
             // Social login action
             self.actionChooseMethod()
         }) {
             HStack {
-                Image(systemName: imageName)
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(color)
+                if isSystemImage {
+                    Image(systemName: imageName)
+                        .frame(width: 24, height: 24)
+                        .foregroundStyle(color)
+                } else {
+                    Image(imageName)
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .clipped()
+                }
+                
                 Text(text)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .fontWidth(.condensed)

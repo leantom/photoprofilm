@@ -350,10 +350,12 @@ class LoginViewModel: NSObject, ObservableObject {
             self.user = result.user
             print(user?.uid ?? "")
             AppSetting.setLogined(value: true)
-            
+            let userFirestore = await getUserDetail()
+            if userFirestore != nil {
+                return
+            }
             let now = Date().timeIntervalSince1970
-            let suffix = "\(now)".suffix(6)
-            let username = "anonymous\(suffix)"
+            let username = generateUsername()
             
             let newUser = NewUser(username: username, email: "\(username)@profilm.com", providers: "anonymous", created_at: now, last_login_at: now, userid: result.user.uid, avatar: randomAvatar())
             LoginViewModel.shared.userLogin = newUser
@@ -362,6 +364,23 @@ class LoginViewModel: NSObject, ObservableObject {
             print(err.localizedDescription)
         }
         
+    }
+    
+    func generateUsername() -> String {
+        // Arrays of funny or meme-like adjectives and nouns
+        let adjectives = ["Fluffy", "Sassy", "Chunky", "Sleepy", "Derpy", "Spicy", "Grumpy", "Funky", "Wobbly", "Sneaky"]
+        let nouns = ["Panda", "Potato", "Taco", "Unicorn", "Sloth", "Banana", "Pickle", "Muffin", "Penguin", "Donut"]
+
+        // Pick a random adjective and noun
+        let randomAdjective = adjectives.randomElement() ?? "Cool"
+        let randomNoun = nouns.randomElement() ?? "Person"
+
+        // Generate a random number
+        let randomNumber = Int.random(in: 100...999)
+
+        // Combine to form the username
+        let username = "\(randomAdjective)\(randomNoun)\(randomNumber)"
+        return username
     }
     
     func deleteUser() async {

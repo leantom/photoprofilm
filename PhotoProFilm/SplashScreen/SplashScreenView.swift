@@ -87,18 +87,18 @@ struct SplashScreenView: View {
                         .fontWidth(.condensed)
                     // Buttons
                     HStack(spacing: 20) {
-                        Button(action: {
-                            //MARK: -- Skip action
-                            actionStart()
-                        }) {
-                            Text("Skip")
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(Color.purple.opacity(0.3))
-                                .foregroundColor(.white)
-                                .fontWidth(.condensed)
-                                .cornerRadius(10)
-                        }
+//                        Button(action: {
+//                            //MARK: -- Skip action
+//                            actionStart()
+//                        }) {
+//                            Text("Skip")
+//                                .padding()
+//                                .frame(maxWidth: .infinity)
+//                                .background(Color.purple.opacity(0.3))
+//                                .foregroundColor(.white)
+//                                .fontWidth(.condensed)
+//                                .cornerRadius(10)
+//                        }
                         
                         Button(action: {
                             // Next action
@@ -113,9 +113,10 @@ struct SplashScreenView: View {
                                 .frame(maxWidth: .infinity)
                                 .background(Color.purple)
                                 .foregroundColor(.white)
-                                .cornerRadius(10)
                                 .fontWidth(.condensed)
+                                .cornerRadius(10)
                         }
+                        
                     }
                     .padding(.top, 10)
                     .padding(.bottom, 100)

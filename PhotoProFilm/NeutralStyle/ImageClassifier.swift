@@ -91,6 +91,31 @@ class ImageClassifier {
     }
     
     
+    func applyModelCIImage(image: CIImage,
+                    style: StyleAI) -> CIImage? {
+        return autoreleasepool {
+            
+            if let cvPixel = image.pixelBuffer {
+                do {
+                    
+                    if highSatuationModel == nil {highSatuationModel = self.initializeHighSatuationModel()}
+                    let result = try highSatuationModel?.prediction(image: cvPixel)
+                    
+                    if let styled = result?.stylizedImage {
+                        let ciiImage = CIImage(cvPixelBuffer: styled)
+                        return ciiImage
+                    }
+                    
+                } catch let err{
+                    print(err.localizedDescription)
+                }
+            }
+            
+            return nil
+        }
+        
+    }
+    
     func applyModel(image: UIImage,
                     style: StyleAI) -> UIImage? {
         return autoreleasepool {
@@ -183,7 +208,6 @@ class ImageClassifier {
         }
         
     }
-    
     
     
     func releaseMemory() {

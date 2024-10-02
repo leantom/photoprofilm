@@ -84,9 +84,7 @@ struct PhotoEditView: View {
                     guard let newImage = resizeAndCompressImage(image: image) else {return }
                     
                     
-                    if !isExporting {
-                        PECtl.shared.setImage(image: newImage)
-                    }
+                    PECtl.shared.setImage(image: newImage)
                 }
             })
         }

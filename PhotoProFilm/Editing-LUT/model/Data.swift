@@ -77,6 +77,15 @@ enum ColorName: String {
     case tan8 = "lut-8"
     case tan9 = "lut-9"
     case tan10 = "lut-10"
+    
+    case BW1 = "BW1"
+    case BW2 = "BW2"
+    case BW3 = "BW3"
+    
+    case BW4 = "BW4"
+    case BW5 = "BW5"
+    case BW6 = "BW6"
+    
 }
 
 class DataColor: ObservableObject {
@@ -153,6 +162,18 @@ class DataColor: ObservableObject {
                 tan.cubeInfos.append(cube)
             }
             collections.append(tan)
+            
+            let bw = Collection(type: .BW, name: "BW", identifier: "BW", cubeInfos: [])
+            for i in 1...6 {
+                let cube = FilterColorCubeInfo(
+                    name: "BW\(i)",
+                    identifier: "BW\(i)",
+                    lutImage: "BW\(i)"
+                )
+                bw.cubeInfos.append(cube)
+            }
+            collections.append(bw)
+            
         }
     }
     

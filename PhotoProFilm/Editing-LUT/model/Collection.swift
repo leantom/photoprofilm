@@ -11,7 +11,7 @@ import PixelEnginePackage
 import SwiftUI
 import Combine
 
-public class Collection: ObservableObject {
+public class Collection: ObservableObject, Identifiable {
     
     public let name: String
     public let identifier: String
@@ -34,7 +34,6 @@ public class Collection: ObservableObject {
                 let cube = FilterColorCube(name: item.name, identifier: item.identifier, lutImage: UIImage(named: item.lutImage)!, dimension: 64);
                 let preview = PreviewFilterColorCube(sourceImage: cubeSourceCI, filter: cube)
                 cubePreviews.append(preview)
-                
             }
         }
     }
@@ -100,7 +99,9 @@ public class Collection: ObservableObject {
 }
 
 
-public struct FilterColorCubeInfo : Equatable {
+public struct FilterColorCubeInfo : Equatable, Identifiable {
+    public var id: String
+    
     public let name: String
     public let identifier: String
     public let lutImage:String
@@ -113,6 +114,7 @@ public struct FilterColorCubeInfo : Equatable {
         self.name = name
         self.identifier = identifier
         self.lutImage = lutImage
+        id = UUID().uuidString
     }
     
     func getFilter()-> FilterColorCube{

@@ -121,12 +121,14 @@ struct ChooseImageView: View {
                 .frame(width: UIScreen.main.bounds.width * dimensionWidth, height: UIScreen.main.bounds.width * dimensionHeight)
                 .padding()
                 .onTapGesture {
-                    showImageSourceSheet.toggle()
+                    
+                    sourceType = .photoLibrary
+                    showingImagePicker = true
                 }
-                .sheet(isPresented: $showImageSourceSheet) {
-                    // Your custom view with options
-                    ImageSourceSelectionView(sourceType: $sourceType, showingImagePicker: $showingImagePicker)
-                }
+//                .sheet(isPresented: $showImageSourceSheet) {
+//                    // Your custom view with options
+//                    ImageSourceSelectionView(sourceType: $sourceType, showingImagePicker: $showingImagePicker)
+//                }
                 Spacer()
                 
                 AnimButtonView(isPressed: showingEdittor,
@@ -144,19 +146,19 @@ struct ChooseImageView: View {
         .alert(isPresented: $showAlert) {
             Alert(title: Text("No Image Selected"), message: Text("Please upload an image before proceeding."), dismissButton: .default(Text("OK")))
         }
-        .confirmationDialog("Select Image", isPresented: $showActionSheet, titleVisibility: .visible) {
-            Button("Photo Library") {
-                sourceType = .photoLibrary
-                showingImagePicker = true
-            }
-            Button("Camera") {
-                sourceType = .camera
-                showingImagePicker = true
-            }
-            Button("Cancel", role: .cancel) { }
-        } message: {
-            Text("Choose a source")
-        }
+//        .confirmationDialog("Select Image", isPresented: $showActionSheet, titleVisibility: .visible) {
+//            Button("Photo Library") {
+//                sourceType = .photoLibrary
+//                showingImagePicker = true
+//            }
+//            Button("Camera") {
+//                sourceType = .camera
+//                showingImagePicker = true
+//            }
+//            Button("Cancel", role: .cancel) { }
+//        } message: {
+//            Text("Choose a source")
+//        }
         .sheet(isPresented: $showingImagePicker, onDismiss: loadImage) {
             CymeImagePicker(image: $inputImage, sourceType: sourceType)
         }

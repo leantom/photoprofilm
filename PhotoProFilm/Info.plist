@@ -191,5 +191,11 @@
 			<string>3qcr597p9d.skadnetwork</string>
 		</dict>
 	</array>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>App needs permission to save photos to your photo album.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>calculatrix-7.ttf</string>
+	</array>
 </dict>
 </plist>
