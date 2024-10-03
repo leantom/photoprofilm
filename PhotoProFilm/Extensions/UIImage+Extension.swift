@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import FirebaseStorage
+import SwiftUI
 
 func uploadImageToFirebase(image: UIImage, imageName: String, completion: @escaping (Result<String, Error>) -> Void) {
     // Convert the UIImage to JPEG data with compression quality
@@ -144,7 +145,7 @@ extension UIImage {
     func addText(atPoint point: CGPoint, color: UIColor) -> UIImage {
         let scale = UIScreen.main.scale
         UIGraphicsBeginImageContextWithOptions(self.size, false, scale)
-        var fontSize = self.size.height * 0.025 // Adjust this proportion as needed
+        let fontSize = self.size.height * 0.025 // Adjust this proportion as needed
        
         let fontCustom = UIFont(name: "calculatrix-7", size: fontSize)
         
@@ -158,9 +159,9 @@ extension UIImage {
         
         // Define the text's attributes
         let textFontAttributes = [
-            NSAttributedString.Key.font: fontCustom,
+            NSAttributedString.Key.font: fontCustom as Any,
             NSAttributedString.Key.foregroundColor: color
-        ]
+        ] as [NSAttributedString.Key : Any]
         
         // Calculate the bounding box for the text to ensure it fits well
         let textSize = text.size(withAttributes: textFontAttributes as [NSAttributedString.Key : Any])

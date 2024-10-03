@@ -19,7 +19,7 @@ class AppState: ObservableObject {
         self.isLogined = AppSetting.checkLogined()
         self.isFirstInstall = AppSetting.checkisFirstLogined()
         setupRemoteConfig()
-               fetchRemoteConfig()
+        fetchRemoteConfig()
         
     }
     

@@ -257,7 +257,7 @@ struct CameraApplyView: View {
         .onAppear {
             listCubeCollection = DataColor.shared.collections
             if let listCinematic = DataColor.shared.collections.filter({ collection in
-                return collection.colorType == .cinematic
+                return collection.colorType == .retro
             }).first?.cubeInfos {
                 self.listCinematic = listCinematic
                 if let item = self.listCinematic.first {

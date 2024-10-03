@@ -238,6 +238,36 @@ struct CameraView: UIViewRepresentable {
                     return
                 }
                 
+                if cube.name.contains("retro") {
+                    guard let textUIImage = UIImage(named: cube.name + "_texture") else { return }
+                    
+                    let textureImage: CIImage? = CIImage(image: textUIImage)
+                    if let textureImage = textureImage {
+                        // Resize texture image to match the camera frame size
+                        let cameraImageSize = cameraImage.extent.size
+                        let resizedTexture = textureImage.transformed(by: CGAffineTransform(scaleX: cameraImageSize.width / textureImage.extent.width, y: cameraImageSize.height / textureImage.extent.height))
+                        
+                        // Apply the blending filter (multiply blend mode in this case)
+                        let blendFilter = CIFilter.multiplyCompositing()
+                        blendFilter.inputImage = cameraImage
+                        blendFilter.backgroundImage = resizedTexture
+                        
+                        if let blendedImage = blendFilter.outputImage {
+                            // Create final image after blending
+                            //let finalImage = cube.apply(to: blendedImage, sourceImage: blendedImage)
+                            
+                            if let cgImage = context.createCGImage(blendedImage, from: blendedImage.extent) {
+                                DispatchQueue.main.async {
+                                    let orientation = self.getCorrectImageOrientation()
+                                    self.parent.image = UIImage(cgImage: cgImage, scale: 1, orientation: orientation)
+                                }
+                            }
+                        }
+                        return
+                    }
+                }
+                
+                
                 let filteredImage = cube.apply(to: cameraImage, sourceImage: cameraImage)
                 
                 if let cgImage = context.createCGImage(filteredImage, from: filteredImage.extent) {

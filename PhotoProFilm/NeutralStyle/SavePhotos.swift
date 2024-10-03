@@ -33,6 +33,8 @@ struct SavePhotosView: View {
     @State private var hasShownAlert = false // New state to track alert
     @State var isExportedDone: Bool = false
     @State private var isShowAds: Bool = false
+    @State  var heightImage: CGFloat = 0
+    
     
     var body: some View {
         GeometryReader { geometry in
@@ -42,10 +44,23 @@ struct SavePhotosView: View {
                 VStack(spacing: 20) {
                     // Top bar with "Save" text
                     HStack {
-                        Text("Save")
-                            .font(.headline)
-                            .fontWidth(.compressed)
-                            .foregroundColor(.white)
+                        // Add to photos button
+                        Button(action: {
+                            if adsShownToday < 2 {
+                                showAdAlertIfNeeded() // Check if alert needs to be shown
+                            } else {
+                                if let photo = self.photo {
+                                    saveImageToPhotoAlbum(image: photo)
+                                    isExportedDone = true
+                                }
+                            }
+                        }) {
+                            HStack {
+                                Text("Save")
+                                    .foregroundStyle(.white)
+                                    .fontWidth(.compressed)
+                            }
+                        }
                         Spacer()
                         Button {
                             dismiss()
@@ -54,40 +69,31 @@ struct SavePhotosView: View {
                                 .font(.title)
                                 .foregroundStyle(.white)
                         }
-                        
                     }
                     .padding()
                     
-                    // Image section
                     if let photo = self.photo {
-                        Image(uiImage: photo) // Replace with your image asset name
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 300, height: 450)
-                            .clipped()
-                            .cornerRadius(10)
+                        GeometryReader { geometry in
+                            let imageAspectRatio = photo.size.width / photo.size.height
+                            let imageWidth =  UIDevice.current.userInterfaceIdiom == .pad ? geometry.size.width * 0.8  : geometry.size.width * 0.95  // Adjust the multiplier as needed
+                            let imageHeight = imageWidth / imageAspectRatio
+                            
+                            HStack {
+                                Spacer() // Add spacer before the image to push it to the center
+
+                                Image(uiImage: photo)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: imageWidth, height: imageHeight)
+                                    .clipped()
+                                    .cornerRadius(10)
+                                
+                                Spacer() // Add spacer after the image to keep it centered
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: imageHeight) // Ensure the HStack takes up full width of the screen
+                        }
                     }
                     
-                    // Add to photos button
-                    Button(action: {
-                        if adsShownToday < 2 {
-                            showAdAlertIfNeeded() // Check if alert needs to be shown
-                        } else {
-                            dismiss()
-                            if let photo = self.photo {
-                                saveImageToPhotoAlbum(image: photo)
-                            }
-                        }
-                    }) {
-                        HStack {
-                            Image("Import_light")
-                                .foregroundStyle(.white)
-                            Text("Add to photos")
-                                .foregroundStyle(.white)
-                                .fontWidth(.compressed)
-                        }
-                    }
-                    .padding()
                     
                     // Social media sharing options
                     HStack(spacing: 20) {
@@ -131,13 +137,6 @@ struct SavePhotosView: View {
                         .shadow(radius: 5)
                     }
                     .transition(.opacity)
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            withAnimation {
-                                self.isExportedDone.toggle()
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -147,13 +146,15 @@ struct SavePhotosView: View {
                 return
             }
             
-            self.photo = photo.addText(atPoint: CGPoint(x: photo.size.width * 0.6, y: photo.size.height * 0.9), color: .yellow)
+            let now = Int64(Date().timeIntervalSince1970)
+            
+            self.photo = photo.addText(atPoint: CGPoint(x: photo.size.width * 0.6, y: photo.size.height * 0.9), color: now % 2 == 0 ? UIColor.vintagePink : UIColor.vintageYellow)
+            
             resetAdCounterIfNeeded()
             InterstitialViewModel.shared.adDismissedHandler = {
                 isExportedDone = true
             }
             
-#if RELEASE
             GoogleMobileAdsConsentManager.shared.gatherConsent { consentError in
                 if let consentError {
                     print("Error: \(consentError.localizedDescription)")
@@ -161,8 +162,18 @@ struct SavePhotosView: View {
                 GoogleMobileAdsConsentManager.shared.startGoogleMobileAdsSDK()
                 self.isShowAds = true
             }
-            GoogleMobileAdsConsentManager.shared.startGoogleMobileAdsSDK()
-#endif
+//            GoogleMobileAdsConsentManager.shared.startGoogleMobileAdsSDK()
+            
+//#if RELEASE
+//            GoogleMobileAdsConsentManager.shared.gatherConsent { consentError in
+//                if let consentError {
+//                    print("Error: \(consentError.localizedDescription)")
+//                }
+//                GoogleMobileAdsConsentManager.shared.startGoogleMobileAdsSDK()
+//                self.isShowAds = true
+//            }
+//            GoogleMobileAdsConsentManager.shared.startGoogleMobileAdsSDK()
+//#endif
         }
         .sheet(isPresented: $isShareSheetPresented) {
             if let photo = self.photo {
@@ -211,20 +222,24 @@ struct SavePhotosView: View {
     func showAd() {
         adsShownToday += 1
         UserDefaults.standard.set(adsShownToday, forKey: "adsShownToday")
-#if DEBUG
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            isExportedDone = true
-            if let photo = self.photo {
-                saveImageToPhotoAlbum(image: photo)
-            }
-        }
-#endif
-
-#if RELEASE
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    isExportedDone = true
+                    if let photo = self.photo {
+                        saveImageToPhotoAlbum(image: photo)
+                    }
+                }
         DispatchQueue.main.async {
             InterstitialViewModel.shared.showAd()
         }
-#endif
+//#if DEBUG
+
+//#endif
+
+//#if RELEASE
+//        DispatchQueue.main.async {
+//            InterstitialViewModel.shared.showAd()
+//        }
+//#endif
     }
 }
 

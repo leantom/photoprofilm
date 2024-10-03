@@ -18,6 +18,7 @@ public enum ColorStyle: String {
     case scene = "Scene"
     case neutral = "Neutral"
     case BW = "BW"
+    case retro = "retro"
     
     var description: String {
             switch self {
@@ -25,7 +26,7 @@ public enum ColorStyle: String {
                 return "Enhance colors and make the photo more vibrant and lively."
             case .cinematic:
                 return "Apply a cinematic filter to give the photo a dramatic, movie-like effect."
-            case .film:
+            case .film, .retro:
                 return "Create a vintage look with classic film tones and textures."
             case .selfie:
                 return "Optimized for selfies with smooth skin tones and enhanced facial features."
@@ -86,6 +87,11 @@ enum ColorName: String {
     case BW5 = "BW5"
     case BW6 = "BW6"
     
+    
+    case retro1 = "retro1"
+    case retro2 = "retro2"
+    case retro3 = "retro3"
+    case retro4 = "retro4"
 }
 
 class DataColor: ObservableObject {
@@ -107,6 +113,17 @@ class DataColor: ObservableObject {
                 lutImage: neutralLUT,
                 dimension: 64
             )
+            
+            let retro = Collection(type: .retro, name: "retro", identifier: "retro", cubeInfos: [])
+            for i in 1...4 {
+                let cube = FilterColorCubeInfo(
+                    name: "retro\(i)",
+                    identifier: "retro\(i)",
+                    lutImage: "retro\(i)"
+                )
+                retro.cubeInfos.append(cube)
+            }
+            collections.append(retro)
             
             let basic = Collection(type: .basic, name: "Basic", identifier: "Basic", cubeInfos: [])
             for i in 1...3 {
@@ -173,6 +190,7 @@ class DataColor: ObservableObject {
                 bw.cubeInfos.append(cube)
             }
             collections.append(bw)
+            
             
         }
     }
@@ -251,6 +269,17 @@ class DataColor: ObservableObject {
                 tan.cubeInfos.append(cube)
             }
             collectionsSelected.append(tan)
+        case .retro:
+            let retro = Collection(type: .retro, name: "retro", identifier: "retro", cubeInfos: [])
+            for i in 1...4 {
+                let cube = FilterColorCubeInfo(
+                    name: "retro\(i)",
+                    identifier: "retro\(i)",
+                    lutImage: "retro\(i)"
+                )
+                retro.cubeInfos.append(cube)
+            }
+            collectionsSelected.append(retro)
         case .neutral:
             break
         }

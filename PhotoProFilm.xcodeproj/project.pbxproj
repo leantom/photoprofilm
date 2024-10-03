@@ -12,14 +12,11 @@
 		F90F592F2C3269DF0026B7C9 /* SplashScreenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90F592E2C3269DF0026B7C9 /* SplashScreenModel.swift */; };
 		F914A5432C295BAE00CE1C65 /* ScrollNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F914A5422C295BAE00CE1C65 /* ScrollNumberView.swift */; };
 		F9167D212CABE4FA000826F4 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9167D202CABE4F4000826F4 /* CameraView.swift */; };
-		F9167D232CABEF9C000826F4 /* BlueStrong.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = F9167D222CABEF9C000826F4 /* BlueStrong.mlmodel */; };
-		F9167D272CABF3BD000826F4 /* ModifiedStyleTransferModel.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = F9167D262CABF3BD000826F4 /* ModifiedStyleTransferModel.mlpackage */; };
 		F9167D292CAC12E2000826F4 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9167D282CAC12DF000826F4 /* LoadingView.swift */; };
 		F93531A02CAC493300FBB5D8 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = F935319F2CAC493300FBB5D8 /* FirebaseStorage */; };
 		F93531A22CAC50CD00FBB5D8 /* CameraViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93531A12CAC50C200FBB5D8 /* CameraViewStyle.swift */; };
 		F93531A42CAC540000FBB5D8 /* Utils+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93531A32CAC53F900FBB5D8 /* Utils+Extension.swift */; };
 		F93531A62CAC588C00FBB5D8 /* ControlPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93531A52CAC588700FBB5D8 /* ControlPanelView.swift */; };
-		F94ADDE62C2FB889001D29D1 /* SketchModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = F94ADDE52C2FB889001D29D1 /* SketchModel.mlmodel */; };
 		F94E53682C3292A3000A7AB7 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F94E53672C3292A3000A7AB7 /* LoginViewModel.swift */; };
 		F94E536B2C329339000A7AB7 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = F94E536A2C329339000A7AB7 /* GoogleSignIn */; };
 		F94E536D2C329339000A7AB7 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F94E536C2C329339000A7AB7 /* GoogleSignInSwift */; };
@@ -28,9 +25,6 @@
 		F94E53732C329499000A7AB7 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F94E53722C329499000A7AB7 /* FirebaseFirestoreSwift */; };
 		F94E53772C329513000A7AB7 /* FireStoreDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F94E53762C329513000A7AB7 /* FireStoreDatabase.swift */; };
 		F94E537A2C32B229000A7AB7 /* ComingSoonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F94E53792C32B229000A7AB7 /* ComingSoonView.swift */; };
-		F95E3B072C2DDD3C00E81357 /* FilmModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = F95E3B062C2DDD3C00E81357 /* FilmModel.mlmodel */; };
-		F963B0612C2EBC0100D3D213 /* VintageModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = F963B0602C2EBC0100D3D213 /* VintageModel.mlmodel */; };
-		F963B0652C2ED39700D3D213 /* VividModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = F963B0642C2ED39700D3D213 /* VividModel.mlmodel */; };
 		F9682DFF2C2E7B1C00AC91F8 /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = F9682DFE2C2E7B1C00AC91F8 /* loading.gif */; };
 		F9752CE62CAC805500EED01A /* TestCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9752CE52CAC804D00EED01A /* TestCamera.swift */; };
 		F9752CE82CAD074E00EED01A /* BWFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9752CE72CAD074B00EED01A /* BWFilter.swift */; };
@@ -48,7 +42,6 @@
 		F98266D72C92E8FA0074DCC5 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = F98266D62C92E8FA0074DCC5 /* GoogleMobileAds */; };
 		F9887CA52C9D45C6000B2793 /* BannerContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9887CA42C9D45C6000B2793 /* BannerContentView.swift */; };
 		F9887CAA2C9D4A81000B2793 /* GoogleMobileAdsConsentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9887CA92C9D4A81000B2793 /* GoogleMobileAdsConsentManager.swift */; };
-		F98938A92C2FDDD1008D704E /* HighSatuation.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = F98938A82C2FDDD1008D704E /* HighSatuation.mlmodel */; };
 		F98A7F052C31BAB30029DFB8 /* ExportChooseSizeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98A7F042C31BAB30029DFB8 /* ExportChooseSizeView.swift */; };
 		F99A2A102C32C54C00F84214 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99A2A0F2C32C54C00F84214 /* UIImage+Extension.swift */; };
 		F99D4D182BF1F4EE003CA835 /* PhotoProFilmApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99D4D172BF1F4EE003CA835 /* PhotoProFilmApp.swift */; };
@@ -141,6 +134,8 @@
 		F9E5286E2C328EFB00AEE86C /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = F9E5286D2C328EFB00AEE86C /* FirebaseFirestore */; };
 		F9E528702C328EFB00AEE86C /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = F9E5286F2C328EFB00AEE86C /* FirebaseMessaging */; };
 		F9E528722C328EFB00AEE86C /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = F9E528712C328EFB00AEE86C /* FirebasePerformance */; };
+		F9E9760A2CAE4887005FBED6 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F9E976092CAE4887005FBED6 /* FirebaseAnalyticsSwift */; };
+		F9E976122CAE59B6005FBED6 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E976112CAE59A9005FBED6 /* UIColor+Extension.swift */; };
 		F9F49EAE2C45956200068BC4 /* AboutUs.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F49EAD2C45956200068BC4 /* AboutUs.swift */; };
 		F9F49EB02C45A31600068BC4 /* Privacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F49EAF2C45A31600068BC4 /* Privacy.swift */; };
 /* End PBXBuildFile section */
@@ -151,13 +146,10 @@
 		F90F592E2C3269DF0026B7C9 /* SplashScreenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenModel.swift; sourceTree = "<group>"; };
 		F914A5422C295BAE00CE1C65 /* ScrollNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollNumberView.swift; sourceTree = "<group>"; };
 		F9167D202CABE4F4000826F4 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
-		F9167D222CABEF9C000826F4 /* BlueStrong.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = BlueStrong.mlmodel; sourceTree = "<group>"; };
-		F9167D262CABF3BD000826F4 /* ModifiedStyleTransferModel.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = ModifiedStyleTransferModel.mlpackage; sourceTree = "<group>"; };
 		F9167D282CAC12DF000826F4 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		F93531A12CAC50C200FBB5D8 /* CameraViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewStyle.swift; sourceTree = "<group>"; };
 		F93531A32CAC53F900FBB5D8 /* Utils+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Utils+Extension.swift"; sourceTree = "<group>"; };
 		F93531A52CAC588700FBB5D8 /* ControlPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelView.swift; sourceTree = "<group>"; };
-		F94ADDE52C2FB889001D29D1 /* SketchModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = SketchModel.mlmodel; sourceTree = "<group>"; };
 		F94E53672C3292A3000A7AB7 /* LoginViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		F94E536E2C3293B0000A7AB7 /* UserViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
 		F94E53702C32940B000A7AB7 /* AppSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSetting.swift; sourceTree = "<group>"; };
@@ -165,9 +157,6 @@
 		F94E53782C3296B8000A7AB7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F94E53792C32B229000A7AB7 /* ComingSoonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComingSoonView.swift; sourceTree = "<group>"; };
 		F94E537B2C32B8D6000A7AB7 /* PhotoProFilm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PhotoProFilm.entitlements; sourceTree = "<group>"; };
-		F95E3B062C2DDD3C00E81357 /* FilmModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = FilmModel.mlmodel; sourceTree = "<group>"; };
-		F963B0602C2EBC0100D3D213 /* VintageModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = VintageModel.mlmodel; sourceTree = "<group>"; };
-		F963B0642C2ED39700D3D213 /* VividModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = VividModel.mlmodel; sourceTree = "<group>"; };
 		F9682DFE2C2E7B1C00AC91F8 /* loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loading.gif; sourceTree = "<group>"; };
 		F9752CE52CAC804D00EED01A /* TestCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCamera.swift; sourceTree = "<group>"; };
 		F9752CE72CAD074B00EED01A /* BWFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BWFilter.swift; sourceTree = "<group>"; };
@@ -183,7 +172,6 @@
 		F98266D32C92E8DE0074DCC5 /* AdMobBannerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdMobBannerView.swift; sourceTree = "<group>"; };
 		F9887CA42C9D45C6000B2793 /* BannerContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerContentView.swift; sourceTree = "<group>"; };
 		F9887CA92C9D4A81000B2793 /* GoogleMobileAdsConsentManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleMobileAdsConsentManager.swift; sourceTree = "<group>"; };
-		F98938A82C2FDDD1008D704E /* HighSatuation.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = HighSatuation.mlmodel; sourceTree = "<group>"; };
 		F98A7F042C31BAB30029DFB8 /* ExportChooseSizeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportChooseSizeView.swift; sourceTree = "<group>"; };
 		F99A2A0F2C32C54C00F84214 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		F99D4D142BF1F4EE003CA835 /* PhotoProFilm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoProFilm.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -267,6 +255,7 @@
 		F9CA84382CA3CFA100720C23 /* InterstitialViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterstitialViewModel.swift; sourceTree = "<group>"; };
 		F9E46FAA2C50E6D4000A8CA1 /* SettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewModel.swift; sourceTree = "<group>"; };
 		F9E528622C328E9C00AEE86C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F9E976112CAE59A9005FBED6 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		F9F49EAD2C45956200068BC4 /* AboutUs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutUs.swift; sourceTree = "<group>"; };
 		F9F49EAF2C45A31600068BC4 /* Privacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Privacy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -279,6 +268,7 @@
 				F9E528702C328EFB00AEE86C /* FirebaseMessaging in Frameworks */,
 				F9AD3A712C22A59700BFBF9D /* SDWebImageSwiftUI in Frameworks */,
 				F94E536B2C329339000A7AB7 /* GoogleSignIn in Frameworks */,
+				F9E9760A2CAE4887005FBED6 /* FirebaseAnalyticsSwift in Frameworks */,
 				F94E536D2C329339000A7AB7 /* GoogleSignInSwift in Frameworks */,
 				F9E528722C328EFB00AEE86C /* FirebasePerformance in Frameworks */,
 				F9E528682C328EFB00AEE86C /* FirebaseAuth in Frameworks */,
@@ -338,6 +328,7 @@
 		F97F9E8A2C267230003E9440 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				F9E976112CAE59A9005FBED6 /* UIColor+Extension.swift */,
 				F97F9E882C26717F003E9440 /* AnimButtonView.swift */,
 				F97DF8F12CA33D92003A9F1F /* Utils+Extenstion.swift */,
 				F99A2A0F2C32C54C00F84214 /* UIImage+Extension.swift */,
@@ -644,15 +635,8 @@
 			isa = PBXGroup;
 			children = (
 				F9A3BE272CAD25CC000A93AF /* Fonts */,
-				F9167D222CABEF9C000826F4 /* BlueStrong.mlmodel */,
 				F9CA84342CA3B6F900720C23 /* paintingStyle.swift */,
 				F9CA84362CA3B74200720C23 /* paintingStyle.json */,
-				F94ADDE52C2FB889001D29D1 /* SketchModel.mlmodel */,
-				F963B0602C2EBC0100D3D213 /* VintageModel.mlmodel */,
-				F98938A82C2FDDD1008D704E /* HighSatuation.mlmodel */,
-				F963B0642C2ED39700D3D213 /* VividModel.mlmodel */,
-				F9167D262CABF3BD000826F4 /* ModifiedStyleTransferModel.mlpackage */,
-				F95E3B062C2DDD3C00E81357 /* FilmModel.mlmodel */,
 				F9682DFE2C2E7B1C00AC91F8 /* loading.gif */,
 				F9AD3A6D2C22A55D00BFBF9D /* icons8-avatar.gif */,
 			);
@@ -692,6 +676,7 @@
 				F98266D62C92E8FA0074DCC5 /* GoogleMobileAds */,
 				F935319F2CAC493300FBB5D8 /* FirebaseStorage */,
 				F9A3BE2A2CAD67BE000A93AF /* FirebaseRemoteConfig */,
+				F9E976092CAE4887005FBED6 /* FirebaseAnalyticsSwift */,
 			);
 			productName = PhotoProFilm;
 			productReference = F99D4D142BF1F4EE003CA835 /* PhotoProFilm.app */;
@@ -788,7 +773,6 @@
 				F99D4D832BF1F7C0003CA835 /* ColorControl.swift in Sources */,
 				F94E53682C3292A3000A7AB7 /* LoginViewModel.swift in Sources */,
 				F93531A42CAC540000FBB5D8 /* Utils+Extension.swift in Sources */,
-				F9167D272CABF3BD000826F4 /* ModifiedStyleTransferModel.mlpackage in Sources */,
 				F9A2EDB32C3AA1DB00F2ED87 /* SettingView.swift in Sources */,
 				F99D4DA82BF1F7C0003CA835 /* ImageBorder.swift in Sources */,
 				F99D4DBA2BF1F7C0003CA835 /* colorful_roomApp.swift in Sources */,
@@ -798,13 +782,11 @@
 				F99D4D892BF1F7C0003CA835 /* HighlightsControl.swift in Sources */,
 				F99A2A102C32C54C00F84214 /* UIImage+Extension.swift in Sources */,
 				F99D4D8C2BF1F7C0003CA835 /* SharpenControl.swift in Sources */,
-				F963B0612C2EBC0100D3D213 /* VintageModel.mlmodel in Sources */,
 				F99D4D992BF1F7C0003CA835 /* FilterMenuUI.swift in Sources */,
 				F99D4D7F2BF1F7C0003CA835 /* Recipe.swift in Sources */,
 				F9F49EB02C45A31600068BC4 /* Privacy.swift in Sources */,
 				F99D4D932BF1F7C0003CA835 /* CustomSlider.swift in Sources */,
 				F97F9E892C26717F003E9440 /* AnimButtonView.swift in Sources */,
-				F9167D232CABEF9C000826F4 /* BlueStrong.mlmodel in Sources */,
 				F99D4D952BF1F7C0003CA835 /* LUTButton.swift in Sources */,
 				F99D4D882BF1F7C0003CA835 /* GaussianBlurControl.swift in Sources */,
 				F9752CEA2CAD0BC200EED01A /* SavePhotos.swift in Sources */,
@@ -840,7 +822,6 @@
 				F97A96622C2D6CD100C30ABE /* ImageClassifier.swift in Sources */,
 				F99D4DA02BF1F7C0003CA835 /* LutsController.swift in Sources */,
 				F99D4D922BF1F7C0003CA835 /* CollectionButton.swift in Sources */,
-				F94ADDE62C2FB889001D29D1 /* SketchModel.mlmodel in Sources */,
 				F99D4D9F2BF1F7C0003CA835 /* FiltersController.swift in Sources */,
 				F94E537A2C32B229000A7AB7 /* ComingSoonView.swift in Sources */,
 				F99D4D962BF1F7C0003CA835 /* RecipeButton.swift in Sources */,
@@ -850,6 +831,7 @@
 				F914A5432C295BAE00CE1C65 /* ScrollNumberView.swift in Sources */,
 				F90F592F2C3269DF0026B7C9 /* SplashScreenModel.swift in Sources */,
 				F9AD3A6B2C228A7400BFBF9D /* CategoryImageView.swift in Sources */,
+				F9E976122CAE59B6005FBED6 /* UIColor+Extension.swift in Sources */,
 				F99D4D9D2BF1F7C0003CA835 /* CropperController.swift in Sources */,
 				F99D4DB22BF1F7C0003CA835 /* CustomCropperView.swift in Sources */,
 				F99D4D8E2BF1F7C0003CA835 /* ToneControl.swift in Sources */,
@@ -858,16 +840,13 @@
 				F99D4D9A2BF1F7C0003CA835 /* LutMenuUI.swift in Sources */,
 				F99D4D972BF1F7C0003CA835 /* Utility.swift in Sources */,
 				F99D4DBD2BF1F7C0003CA835 /* Persistence.swift in Sources */,
-				F98938A92C2FDDD1008D704E /* HighSatuation.mlmodel in Sources */,
 				F99D4DBE2BF1F7C0003CA835 /* PhotoEdittor.swift in Sources */,
 				F99D4D852BF1F7C0003CA835 /* ContrastControl.swift in Sources */,
 				F97DF8F22CA33D9C003A9F1F /* Utils+Extenstion.swift in Sources */,
 				F9887CAA2C9D4A81000B2793 /* GoogleMobileAdsConsentManager.swift in Sources */,
 				F99D4D8A2BF1F7C0003CA835 /* SaturationControl.swift in Sources */,
 				F99D4D862BF1F7C0003CA835 /* ExposureControl.swift in Sources */,
-				F95E3B072C2DDD3C00E81357 /* FilmModel.mlmodel in Sources */,
 				F99D4DB02BF1F7C0003CA835 /* StorageUtils.swift in Sources */,
-				F963B0652C2ED39700D3D213 /* VividModel.mlmodel in Sources */,
 				F9012DD52CA46A290072F438 /* ImageSourceSelectionView.swift in Sources */,
 				F980E63D2C32891C00EEB73E /* LoginView.swift in Sources */,
 				F94E53712C32940B000A7AB7 /* AppSetting.swift in Sources */,
@@ -1012,7 +991,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PhotoProFilm/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = 1980s;
+				INFOPLIST_KEY_CFBundleDisplayName = "1980s - Retro";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera to capture photos and videos for editing";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "This app requires access to your photo library to save photos.";
@@ -1055,7 +1034,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PhotoProFilm/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = 1980s;
+				INFOPLIST_KEY_CFBundleDisplayName = "1980s - Retro";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera to capture photos and videos for editing";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "This app requires access to your photo library to save photos.";
@@ -1238,6 +1217,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F9E528642C328EFB00AEE86C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebasePerformance;
+		};
+		F9E976092CAE4887005FBED6 /* FirebaseAnalyticsSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F9E528642C328EFB00AEE86C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 

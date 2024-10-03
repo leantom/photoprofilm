@@ -44,6 +44,7 @@ class InterstitialViewModel: NSObject, GADFullScreenContentDelegate {
   // [START show_ad]
   func showAd() {
     guard let interstitialAd = interstitialAd else {
+        adDismissedHandler?()
       return print("Ad wasn't ready.")
     }
       
@@ -67,6 +68,8 @@ class InterstitialViewModel: NSObject, GADFullScreenContentDelegate {
     didFailToPresentFullScreenContentWithError error: Error
   ) {
       print("\(#function) called + \(error.localizedDescription)")
+      interstitialAd = nil
+      adDismissedHandler?()
   }
 
   func adWillPresentFullScreenContent(_ ad: GADFullScreenPresentingAd) {
