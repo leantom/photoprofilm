@@ -17,14 +17,17 @@ import PixelEnginePackage
 enum AspectRatio {
     case ratio4_3
     case ratio9_16
+    case ratio1_1
 }
 struct CameraApplyView: View {
     @State private var image: UIImage?
+    @State private var inputImage: UIImage?
+    
     @State var listCubeCollection: [Collection] = []
     @State var listCinematic: [FilterColorCubeInfo] = []
     @State var cubeSelected: FilterColorCube?
     @State var styleSelected: Collection?
-    @State var aspectRatio: AspectRatio = .ratio4_3 // Default aspect ratio
+    @State var aspectRatio: AspectRatio = .ratio9_16 // Default aspect ratio
     
     @State var isStopCamera = false
     @State var isSelectRatio = false
@@ -37,6 +40,10 @@ struct CameraApplyView: View {
     @State var isLoading: Bool = false
     @State var countdownTime: Int = 0
     @State var isCountingDown: Bool = false
+    @State var isEditPhoto: Bool = false
+    @State var isSelectedPhoto: Bool = false
+    
+    @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
     let imageWidth = UIScreen.main.bounds.width * 0.11 // Set width to 20% of screen width
     @State var imageHeight = UIScreen.main.bounds.width * 0.11 // Calculate height based on 5:7 ratio
@@ -44,14 +51,14 @@ struct CameraApplyView: View {
     var body: some View {
         ZStack {
             VStack {
-                
                 VStack {
                     if let image = image, isLoading == false {
                         Image(uiImage: image)
                             .resizable()
-                            .scaledToFill()
-                            .edgesIgnoringSafeArea(.all)
+                            .aspectRatio(contentMode: .fill)
+                            .clipped()
                     } else {
+                        
                         LoadingView()
                     }
                     
@@ -61,9 +68,11 @@ struct CameraApplyView: View {
                                isStopCamera: $isStopCamera,
                                isFrontCamera: $isFrontCamera,
                                isFlashOn: $isFlashOn)
+                                .padding()
+                                .allowsHitTesting(false)
                 )
                 .frame(width: UIScreen.main.bounds.width, height: getCameraViewHeight())
-                .padding(.top, 5)
+                .padding(.top, aspectRatio == .ratio1_1 ? 85 : 5)
                 Spacer()
             }
             VStack(alignment: .center) {
@@ -71,12 +80,13 @@ struct CameraApplyView: View {
                     // Flash button (left icon)
                     Button(action: {
                         // Flash action here
-                        isFlashOn.toggle()
+                        isEditPhoto = true
                     }) {
-                        Image(systemName: isFlashOn ? "bolt" : "bolt.slash")
-                            .font(.system(size: 20))
-                            .foregroundColor(isFlashOn ? .yellow :.white)
-                            
+
+                        Text(isEditPhoto ? "Edit" : "Photo")
+                            .font(.system(size: 13, weight: .regular, design: .monospaced))
+                            .foregroundColor(isEditPhoto ? .yellow :.white)
+                        
                     }
                     .frame(width: 50, height: 50)
                     Spacer()
@@ -87,8 +97,9 @@ struct CameraApplyView: View {
                         Image(systemName: isSelectRatio ? "chevron.down" : "chevron.up")
                             .font(.system(size: 20, weight: .regular))
                             .foregroundStyle(isSelectRatio ? .yellow : .white)
-                            .frame(width: 50, height: 50)
                     }
+                    .frame(width: 50, height: 50)
+                    
                     Spacer()
                     
                     // Right icon (right icon)
@@ -101,8 +112,9 @@ struct CameraApplyView: View {
                             .font(.system(size: 20))
                             .foregroundColor(isTurnOnFilter ? .yellow :.white)
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 50, height: 50)
+                        
                     }
+                    .frame(width: 50, height: 50)
                 }
                 .padding()
                 Spacer()
@@ -120,6 +132,7 @@ struct CameraApplyView: View {
                                         .onTapGesture {
                                             listCinematic = collection.cubeInfos
                                             styleSelected = collection
+                                            AppState.shared.currentStyle = ColorStyle(rawValue: collection.name) ?? .retro
                                         }
                                 }
                             }
@@ -128,8 +141,8 @@ struct CameraApplyView: View {
                         .frame(width: UIScreen.main.bounds.width - 10, height: 30)
                         ScrollView(.horizontal, showsIndicators: false) {
                             LazyHGrid(rows: [GridItem(.fixed(100))],  spacing: 20) {
-                               
-
+                                
+                                
                                 ForEach(listCinematic) { cinematic in
                                     Image(cinematic.name)
                                         .resizable()
@@ -150,6 +163,7 @@ struct CameraApplyView: View {
                                             }
                                             withAnimation {
                                                 self.cubeSelected = cube
+                                                AppState.shared.cubeSelected = cube
                                             }
                                             
                                         }
@@ -168,6 +182,7 @@ struct CameraApplyView: View {
                         }, timerAction: { duration in
                             self.countdownTime = duration
                         }, aspectRatio: $aspectRatio, isTimerOn: $isTimeOn)
+                        .frame(maxWidth: UIScreen.main.bounds.width)
                         .transition(.move(edge: .bottom))
                     }
                     
@@ -175,32 +190,34 @@ struct CameraApplyView: View {
                 
                 
                 HStack {
-                    
-                    Button {
-                        // MARK: -- go to save galary
-                        if AppState.shared.photoEdit  == nil {
-                            AppState.shared.photoEdit = UIImage(imageLiteralResourceName: "img_0013")
+                    // Left section with the first button
+                    HStack {
+                        Button {
+                            if AppState.shared.photoEdit == nil {
+                                AppState.shared.photoEdit = UIImage(imageLiteralResourceName: "img_0013")
+                            }
+                            path.append("savePhoto")
+                        } label: {
+                            if let capture = imageCaptureFinal {
+                                Image(uiImage: capture)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 50, height: 72)
+                                    .clipped()
+                                    .cornerRadius(10)
+                            } else {
+                                Image("img_0013")
+                                    .resizable()
+                                    .frame(width: 50, height: 72)
+                                    .clipped()
+                                    .cornerRadius(10)
+                            }
                         }
-                        path.append("savePhoto")
-                    } label: {
-                        if let capture = imageCaptureFinal {
-                            Image(uiImage: capture)
-                                .resizable()
-                                .frame(width: 50, height: 72)
-                                .clipped()
-                                .cornerRadius(10)
-                        } else {
-                            Image("img_0013")
-                                .resizable()
-                                .frame(width: 50, height: 72)
-                                .clipped()
-                                .cornerRadius(10)
-                        }
-                        
-                        
+                        .padding(.bottom, 20)
+                        Spacer() // Adds space to push the button to the left
                     }
-                    .padding(.bottom, 20)
-                    Spacer()
+                    
+                    // Center section with the Shutter button
                     Button {
                         // Trigger haptic feedback
                         if isTimeOn {
@@ -209,7 +226,7 @@ struct CameraApplyView: View {
                         }
                         let impactFeedbackgenerator = UIImpactFeedbackGenerator(style: .medium)
                         impactFeedbackgenerator.impactOccurred()
-                            
+                        
                         isLoading = true
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             isLoading = false
@@ -224,20 +241,32 @@ struct CameraApplyView: View {
                             .frame(width: 72, height: 72)
                     }
                     .padding(.bottom, 20)
-                    Spacer()
-                    Button {
-                        isFrontCamera.toggle()
-                    } label: {
-                        Image("changeCamera")
-                            .foregroundStyle(.white)
-                            .frame(width: 40, height: 40)
+                    
+                    // Right section with camera toggle and media selection buttons
+                    HStack {
+                        Spacer() // Adds space to push the buttons to the right
+                        Button {
+                            isFrontCamera.toggle()
+                        } label: {
+                            Image("changeCamera")
+                                .foregroundStyle(.white)
+                                .frame(width: 40, height: 40)
+                        }
+                        .frame(width: 50, height: 50)
+                        
+                        Button(action: {
+                            isSelectedPhoto.toggle()
+                        }) {
+                            Image("img_media")
+                        }
+                        .frame(width: 50, height: 50)
                     }
-                    .frame(width: 50, height: 50)
                     .padding(.bottom, 20)
                 }
                 .padding()
                 
             }
+            .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: .infinity, alignment: .top)
             .onChange(of: aspectRatio) {  newValue in
                 withAnimation {
                     isSelectRatio.toggle()
@@ -255,7 +284,13 @@ struct CameraApplyView: View {
         }
         .background(.black)
         .onAppear {
+            isStopCamera = false
             listCubeCollection = DataColor.shared.collections
+            imageHeight = imageWidth * (7 / 5)
+            if self.styleSelected != nil {
+                return
+            }
+            
             if let listCinematic = DataColor.shared.collections.filter({ collection in
                 return collection.colorType == .retro
             }).first?.cubeInfos {
@@ -263,11 +298,33 @@ struct CameraApplyView: View {
                 if let item = self.listCinematic.first {
                     let cube = FilterColorCube(name: item.name, identifier: item.identifier, lutImage: UIImage(named: item.lutImage)!, dimension: 64)
                     self.cubeSelected = cube
+                    AppState.shared.cubeSelected = cube
                     
                 }
             }
-            imageHeight = imageWidth * (7 / 5)
+            
             styleSelected = listCubeCollection.first
+            AppState.shared.currentStyle = ColorStyle(rawValue: styleSelected?.name ?? "retro") ?? .retro
+#if DEBUG
+            image = UIImage(named: "lands")
+#endif
+        }
+        .onDisappear(perform: {
+            isStopCamera.toggle()
+        })
+        .sheet(isPresented: $isSelectedPhoto, onDismiss: loadImage) {
+            CymeImagePicker(image: $inputImage, sourceType: sourceType)
+        }
+    }
+    
+    func loadImage() {
+        guard let inputImage = inputImage else { return }
+        image = inputImage
+        AppState.shared.photoEdit = inputImage
+        isLoading.toggle()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+            path.append(Screen.editPhoto.rawValue)
+            isLoading.toggle()
         }
     }
     
@@ -281,18 +338,19 @@ struct CameraApplyView: View {
             }
             return screenWidth * (4 / 3) // Height for 4:3
         case .ratio9_16:
-            print("height: \(screenWidth * 1.45)")
             if UIDevice.current.userInterfaceIdiom == .pad {
                 return screenWidth * 1.2
             }
-            return screenWidth * 1.5 // Height for 9:16
+            return screenWidth * 1.6 // Height for 9:16
+        case .ratio1_1:
+            return screenWidth
         }
     }
     
     func startCountdown(duration: Int) {
         countdownTime = duration
         isCountingDown = true
-
+        
         // Create a timer that updates every second
         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             if self.countdownTime > 0 {
@@ -309,7 +367,7 @@ struct CameraApplyView: View {
         // Trigger haptic feedback
         let impactFeedbackgenerator = UIImpactFeedbackGenerator(style: .medium)
         impactFeedbackgenerator.impactOccurred()
-
+        
         isLoading = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             isLoading = false

@@ -196,6 +196,8 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>calculatrix-7.ttf</string>
+		<string>MinoltaClv.ttf</string>
+		<string>VCR_OSD_MONO_1.ttf</string>
 	</array>
 </dict>
 </plist>

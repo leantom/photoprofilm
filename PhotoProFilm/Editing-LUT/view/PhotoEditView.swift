@@ -72,6 +72,9 @@ struct PhotoEditView: View {
             .navigationBarHidden(true)
             .onAppear(perform: {
                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)){
+                    
+                    pickImage = AppState.shared.photoEdit
+                    
                     guard let image = pickImage else {
                         return
                     }

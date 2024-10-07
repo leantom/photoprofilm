@@ -52,8 +52,9 @@ struct ControlPanelView: View {
                     .transition(.move(edge: .trailing))
                                     .animation(.easeInOut(duration: 0.5), value: isShowTimerBar)
             } else {
-                HStack(spacing: 20) {
+                HStack(spacing: 10) {
                     // Flash button
+                    Spacer()
                     Button(action: {
                         // Call the action closure when the button is tapped
                         flashAction()
@@ -73,6 +74,7 @@ struct ControlPanelView: View {
                                     .clipped()
                             )
                     }
+                    .padding(.leading, 10)
                     Spacer()
                     // Ratio button (4:3 as text)
                     Button(action: {
@@ -93,13 +95,33 @@ struct ControlPanelView: View {
                         
                     }
                     Spacer()
+                    
+                    Button(action: {
+                        
+                        aspectRatio = .ratio1_1
+                    }) {
+                        
+                        Text("1:1")
+                            .font(.headline)
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(.white)
+                            .padding([.leading, .trailing], 10)
+                            .cornerRadius(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(aspectRatio == .ratio1_1 ? Color.yellow : .white, lineWidth: 1)
+                            )
+                        
+                    }
+                    Spacer()
+                    
                     Button(action: {
                         aspectRatio = .ratio9_16
                     }) {
                         
                         Text("9:16")
                             .font(.headline)
-                            .frame(width: 50, height: 30)
+                            .frame(width: 40, height: 30)
                             .foregroundColor(.white)
                             .padding([.leading, .trailing], 10)
                             .cornerRadius(10)
@@ -132,13 +154,16 @@ struct ControlPanelView: View {
                                     .clipped()
                             )
                     }
+                    .padding(.trailing, 10)
+                    Spacer()
                 }
                 .padding()
+                .frame(width: UIScreen.main.bounds.width - 10)
             }
         }
         .transition(.move(edge: .leading)) // Add transition when it disappears
         .animation(.easeInOut(duration: 0.5), value: isShowTimerBar)
-    
+        
         
     }
     

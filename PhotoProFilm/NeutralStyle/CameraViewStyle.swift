@@ -200,6 +200,27 @@ struct CameraView: UIViewRepresentable {
         func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
             guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
             let cameraImage = CIImage(cvPixelBuffer: pixelBuffer)
+//            
+//            let config = MLModelConfiguration()
+//            config.computeUnits = .all
+//            var s : MLModel?
+//            s = try? colorful.init(configuration: config).model
+//            guard let styleModel = s else{return}
+//            guard let model = try? VNCoreMLModel(for: styleModel) else { return }
+//            let request = VNCoreMLRequest(model: model) { (finishedRequest, error) in
+//                guard let results = finishedRequest.results as? [VNPixelBufferObservation] else { return }
+//
+//                guard let observation = results.first else { return }
+//
+//                DispatchQueue.main.async(execute: {
+//                    let orientation = self.getCorrectImageOrientation()
+//                    let image = UIImage.initFrom(pixelBuffer: observation.pixelBuffer, orientation: orientation)
+//                    self.parent.image = image
+//                })
+//            }
+//            
+//            guard let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+//            try? VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:]).perform([request])
             
             if let cube = parent.cube {
                 

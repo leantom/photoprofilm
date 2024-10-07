@@ -18,7 +18,6 @@ struct ChooseImageView: View {
     
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @State private var showActionSheet = false
-
     
     @State private var showAlert = false // State variable for showing alert
     @State private var showImageSourceSheet = false

@@ -34,7 +34,9 @@ struct SavePhotosView: View {
     @State var isExportedDone: Bool = false
     @State private var isShowAds: Bool = false
     @State  var heightImage: CGFloat = 0
-    
+    @State var isSelectedPhoto: Bool = false
+    @State private var inputImage: UIImage?
+    @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
     var body: some View {
         GeometryReader { geometry in
@@ -44,6 +46,14 @@ struct SavePhotosView: View {
                 VStack(spacing: 20) {
                     // Top bar with "Save" text
                     HStack {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "xmark.app")
+                                .font(.title)
+                                .foregroundStyle(.white)
+                        }
+                        Spacer()
                         // Add to photos button
                         Button(action: {
                             if adsShownToday < 2 {
@@ -61,14 +71,8 @@ struct SavePhotosView: View {
                                     .fontWidth(.compressed)
                             }
                         }
-                        Spacer()
-                        Button {
-                            dismiss()
-                        } label: {
-                            Image(systemName: "xmark.app")
-                                .font(.title)
-                                .foregroundStyle(.white)
-                        }
+                        
+                        
                     }
                     .padding()
                     
@@ -94,9 +98,14 @@ struct SavePhotosView: View {
                         }
                     }
                     
-                    
                     // Social media sharing options
                     HStack(spacing: 20) {
+                        Button(action: {
+                            isSelectedPhoto.toggle()
+                        }) {
+                            Image("img_media")
+                        }
+                        .frame(width: 50, height: 50)
                         Text("Share your friends")
                             .font(.subheadline)
                             .fontWidth(.condensed)
@@ -139,6 +148,7 @@ struct SavePhotosView: View {
                     .transition(.opacity)
                 }
             }
+            
         }
         .background(Color.black)
         .onAppear {
@@ -155,6 +165,8 @@ struct SavePhotosView: View {
                 isExportedDone = true
             }
             
+            
+#if RELEASE
             GoogleMobileAdsConsentManager.shared.gatherConsent { consentError in
                 if let consentError {
                     print("Error: \(consentError.localizedDescription)")
@@ -162,18 +174,8 @@ struct SavePhotosView: View {
                 GoogleMobileAdsConsentManager.shared.startGoogleMobileAdsSDK()
                 self.isShowAds = true
             }
-//            GoogleMobileAdsConsentManager.shared.startGoogleMobileAdsSDK()
-            
-//#if RELEASE
-//            GoogleMobileAdsConsentManager.shared.gatherConsent { consentError in
-//                if let consentError {
-//                    print("Error: \(consentError.localizedDescription)")
-//                }
-//                GoogleMobileAdsConsentManager.shared.startGoogleMobileAdsSDK()
-//                self.isShowAds = true
-//            }
-//            GoogleMobileAdsConsentManager.shared.startGoogleMobileAdsSDK()
-//#endif
+            GoogleMobileAdsConsentManager.shared.startGoogleMobileAdsSDK()
+#endif
         }
         .sheet(isPresented: $isShareSheetPresented) {
             if let photo = self.photo {
@@ -186,6 +188,9 @@ struct SavePhotosView: View {
                 Text("No photo to share.")
             }
         }
+        .sheet(isPresented: $isSelectedPhoto, onDismiss: loadImage) {
+            CymeImagePicker(image: $inputImage, sourceType: sourceType)
+        }
         .alert(isPresented: $showAlert) {
             Alert(
                 title: Text("Notice"),
@@ -196,7 +201,10 @@ struct SavePhotosView: View {
             )
         }
     }
-
+    func loadImage() {
+        guard let inputImage = inputImage else { return }
+        photo = inputImage
+    }
     func resetAdCounterIfNeeded() {
         let today = Date()
         let calendar = Calendar.current
@@ -228,18 +236,15 @@ struct SavePhotosView: View {
                         saveImageToPhotoAlbum(image: photo)
                     }
                 }
-        DispatchQueue.main.async {
-            InterstitialViewModel.shared.showAd()
-        }
 //#if DEBUG
 
 //#endif
 
-//#if RELEASE
-//        DispatchQueue.main.async {
-//            InterstitialViewModel.shared.showAd()
-//        }
-//#endif
+#if RELEASE
+        DispatchQueue.main.async {
+            InterstitialViewModel.shared.showAd()
+        }
+#endif
     }
 }
 

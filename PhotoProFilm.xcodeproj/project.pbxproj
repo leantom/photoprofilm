@@ -35,6 +35,7 @@
 		F97DF8F62CA33DCF003A9F1F /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F97DF8F52CA33DCF003A9F1F /* InstructionView.swift */; };
 		F97F9E892C26717F003E9440 /* AnimButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F97F9E882C26717F003E9440 /* AnimButtonView.swift */; };
 		F97F9E8D2C267FD2003E9440 /* NavigationTransitions in Frameworks */ = {isa = PBXBuildFile; productRef = F97F9E8C2C267FD2003E9440 /* NavigationTransitions */; };
+		F980BA932CAFE391001A4D2C /* MinoltaClv.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F980BA922CAFE391001A4D2C /* MinoltaClv.ttf */; };
 		F980E63D2C32891C00EEB73E /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F980E63C2C32891C00EEB73E /* LoginView.swift */; };
 		F980E6422C328D2B00EEB73E /* DataLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F980E6412C328D2B00EEB73E /* DataLayer.swift */; };
 		F980E6452C328E6900EEB73E /* colorful_room.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F980E6432C328E6900EEB73E /* colorful_room.xcdatamodeld */; };
@@ -125,6 +126,11 @@
 		F9CA84352CA3B70100720C23 /* paintingStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CA84342CA3B6F900720C23 /* paintingStyle.swift */; };
 		F9CA84372CA3B74200720C23 /* paintingStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = F9CA84362CA3B74200720C23 /* paintingStyle.json */; };
 		F9CA84392CA3CFA100720C23 /* InterstitialViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CA84382CA3CFA100720C23 /* InterstitialViewModel.swift */; };
+		F9D1CAEC2CB3A44500E7E382 /* colorful.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = F9D1CAEB2CB3A44500E7E382 /* colorful.mlmodel */; };
+		F9D1CAEE2CB3CDF600E7E382 /* Camera+Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D1CAED2CB3CDF000E7E382 /* Camera+Video.swift */; };
+		F9D1CAF02CB3DF2700E7E382 /* EditPhotoCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D1CAEF2CB3DF1900E7E382 /* EditPhotoCameraView.swift */; };
+		F9E404092CAFF34C00B75E8C /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E404082CAFF34400B75E8C /* AppState.swift */; };
+		F9E4040B2CAFF40D00B75E8C /* VCR_OSD_MONO_1.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F9E4040A2CAFF40D00B75E8C /* VCR_OSD_MONO_1.ttf */; };
 		F9E46FAB2C50E6D4000A8CA1 /* SettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E46FAA2C50E6D4000A8CA1 /* SettingViewModel.swift */; };
 		F9E528632C328E9C00AEE86C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F9E528622C328E9C00AEE86C /* GoogleService-Info.plist */; };
 		F9E528662C328EFB00AEE86C /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = F9E528652C328EFB00AEE86C /* FirebaseAnalytics */; };
@@ -166,6 +172,7 @@
 		F97DF8F12CA33D92003A9F1F /* Utils+Extenstion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Utils+Extenstion.swift"; sourceTree = "<group>"; };
 		F97DF8F52CA33DCF003A9F1F /* InstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
 		F97F9E882C26717F003E9440 /* AnimButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimButtonView.swift; sourceTree = "<group>"; };
+		F980BA922CAFE391001A4D2C /* MinoltaClv.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MinoltaClv.ttf; sourceTree = "<group>"; };
 		F980E63C2C32891C00EEB73E /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		F980E6412C328D2B00EEB73E /* DataLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLayer.swift; sourceTree = "<group>"; };
 		F980E6442C328E6900EEB73E /* colorful_room.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = colorful_room.xcdatamodel; sourceTree = "<group>"; };
@@ -253,6 +260,11 @@
 		F9CA84342CA3B6F900720C23 /* paintingStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = paintingStyle.swift; sourceTree = "<group>"; };
 		F9CA84362CA3B74200720C23 /* paintingStyle.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = paintingStyle.json; sourceTree = "<group>"; };
 		F9CA84382CA3CFA100720C23 /* InterstitialViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterstitialViewModel.swift; sourceTree = "<group>"; };
+		F9D1CAEB2CB3A44500E7E382 /* colorful.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = colorful.mlmodel; sourceTree = "<group>"; };
+		F9D1CAED2CB3CDF000E7E382 /* Camera+Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Camera+Video.swift"; sourceTree = "<group>"; };
+		F9D1CAEF2CB3DF1900E7E382 /* EditPhotoCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPhotoCameraView.swift; sourceTree = "<group>"; };
+		F9E404082CAFF34400B75E8C /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		F9E4040A2CAFF40D00B75E8C /* VCR_OSD_MONO_1.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = VCR_OSD_MONO_1.ttf; sourceTree = "<group>"; };
 		F9E46FAA2C50E6D4000A8CA1 /* SettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewModel.swift; sourceTree = "<group>"; };
 		F9E528622C328E9C00AEE86C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F9E976112CAE59A9005FBED6 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
@@ -317,8 +329,10 @@
 				F9752CE52CAC804D00EED01A /* TestCamera.swift */,
 				F93531A52CAC588700FBB5D8 /* ControlPanelView.swift */,
 				F93531A12CAC50C200FBB5D8 /* CameraViewStyle.swift */,
+				F9D1CAED2CB3CDF000E7E382 /* Camera+Video.swift */,
 				F9167D202CABE4F4000826F4 /* CameraView.swift */,
 				F97A965B2C2D64FB00C30ABE /* EditPhotoView.swift */,
+				F9D1CAEF2CB3DF1900E7E382 /* EditPhotoCameraView.swift */,
 				F97A96612C2D6CD100C30ABE /* ImageClassifier.swift */,
 				F98A7F042C31BAB30029DFB8 /* ExportChooseSizeView.swift */,
 			);
@@ -400,6 +414,7 @@
 				F9CA84382CA3CFA100720C23 /* InterstitialViewModel.swift */,
 				F93531A32CAC53F900FBB5D8 /* Utils+Extension.swift */,
 				F9167D282CAC12DF000826F4 /* LoadingView.swift */,
+				F9E404082CAFF34400B75E8C /* AppState.swift */,
 				F98266D32C92E8DE0074DCC5 /* AdMobBannerView.swift */,
 				F99D4D192BF1F4EE003CA835 /* ContentView.swift */,
 				F9887CA42C9D45C6000B2793 /* BannerContentView.swift */,
@@ -626,6 +641,8 @@
 		F9A3BE272CAD25CC000A93AF /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				F9E4040A2CAFF40D00B75E8C /* VCR_OSD_MONO_1.ttf */,
+				F980BA922CAFE391001A4D2C /* MinoltaClv.ttf */,
 				F9A3BE282CAD25DA000A93AF /* calculatrix-7.ttf */,
 			);
 			path = Fonts;
@@ -636,6 +653,7 @@
 			children = (
 				F9A3BE272CAD25CC000A93AF /* Fonts */,
 				F9CA84342CA3B6F900720C23 /* paintingStyle.swift */,
+				F9D1CAEB2CB3A44500E7E382 /* colorful.mlmodel */,
 				F9CA84362CA3B74200720C23 /* paintingStyle.json */,
 				F9682DFE2C2E7B1C00AC91F8 /* loading.gif */,
 				F9AD3A6D2C22A55D00BFBF9D /* icons8-avatar.gif */,
@@ -733,9 +751,11 @@
 				F9AD3A6E2C22A55D00BFBF9D /* icons8-avatar.gif in Resources */,
 				F9E528632C328E9C00AEE86C /* GoogleService-Info.plist in Resources */,
 				F9A3BE292CAD25DA000A93AF /* calculatrix-7.ttf in Resources */,
+				F9E4040B2CAFF40D00B75E8C /* VCR_OSD_MONO_1.ttf in Resources */,
 				F99D4DB82BF1F7C0003CA835 /* Assets.xcassets in Resources */,
 				F99D4D1C2BF1F4EF003CA835 /* Assets.xcassets in Resources */,
 				F9CA84372CA3B74200720C23 /* paintingStyle.json in Resources */,
+				F980BA932CAFE391001A4D2C /* MinoltaClv.ttf in Resources */,
 				F9682DFF2C2E7B1C00AC91F8 /* loading.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -755,6 +775,7 @@
 				F99D4DA32BF1F7C0003CA835 /* ImagePreviewView.swift in Sources */,
 				F99D4DAA2BF1F7C0003CA835 /* RaiseButton.swift in Sources */,
 				F99D4D9C2BF1F7C0003CA835 /* Action.swift in Sources */,
+				F9D1CAEE2CB3CDF600E7E382 /* Camera+Video.swift in Sources */,
 				F90F592D2C3269C30026B7C9 /* SplashScreenView.swift in Sources */,
 				F99D4D7E2BF1F7C0003CA835 /* ImageSaver.swift in Sources */,
 				F9752CE62CAC805500EED01A /* TestCamera.swift in Sources */,
@@ -774,7 +795,9 @@
 				F94E53682C3292A3000A7AB7 /* LoginViewModel.swift in Sources */,
 				F93531A42CAC540000FBB5D8 /* Utils+Extension.swift in Sources */,
 				F9A2EDB32C3AA1DB00F2ED87 /* SettingView.swift in Sources */,
+				F9E404092CAFF34C00B75E8C /* AppState.swift in Sources */,
 				F99D4DA82BF1F7C0003CA835 /* ImageBorder.swift in Sources */,
+				F9D1CAEC2CB3A44500E7E382 /* colorful.mlmodel in Sources */,
 				F99D4DBA2BF1F7C0003CA835 /* colorful_roomApp.swift in Sources */,
 				F99D4D872BF1F7C0003CA835 /* FadeControl.swift in Sources */,
 				F99D4D902BF1F7C0003CA835 /* WhiteBalanceControl.swift in Sources */,
@@ -827,6 +850,7 @@
 				F99D4D962BF1F7C0003CA835 /* RecipeButton.swift in Sources */,
 				F97A965C2C2D64FB00C30ABE /* EditPhotoView.swift in Sources */,
 				F9167D212CABE4FA000826F4 /* CameraView.swift in Sources */,
+				F9D1CAF02CB3DF2700E7E382 /* EditPhotoCameraView.swift in Sources */,
 				F94E53772C329513000A7AB7 /* FireStoreDatabase.swift in Sources */,
 				F914A5432C295BAE00CE1C65 /* ScrollNumberView.swift in Sources */,
 				F90F592F2C3269DF0026B7C9 /* SplashScreenModel.swift in Sources */,
@@ -1006,7 +1030,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = vn.cyme.PhotoProFilm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1049,7 +1073,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = vn.cyme.PhotoProFilm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

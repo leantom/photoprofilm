@@ -8,21 +8,20 @@ import UIKit
 
 extension UIColor {
     static var vintagePink: UIColor {
-        UIColor(hex: "#E08F1C") ?? .systemPink
+        let color = UIColor(hexString: "#E08F1C")
+        return color
     }
     static var vintageYellow: UIColor {
-        if let color = UIColor(hex: "#E08F1C") {
-            return color
-        }
-        return .systemPink
+        let color = UIColor(hexString: "#E08F1C")
+        return color
     }
     
 }
 
 extension UIColor {
     /// For converting Hex-based colors
-    convenience init(hex: String) {
-        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+    convenience init(hexString: String) {
+        var hexSanitized = hexString.trimmingCharacters(in: .whitespacesAndNewlines)
         hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
         var rgb: UInt64 = 0
 

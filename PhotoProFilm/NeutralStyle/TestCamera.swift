@@ -10,8 +10,8 @@ struct TestCameraView: View {
     @State private var image: UIImage?
     @State private var isStopCamera = false
     @State private var isFrontCamera = false
-    @State private var selectedImage: UIImage? = UIImage(named: "IMG_0795_1") // Placeholder image
-    @State private var textureImage: UIImage? = UIImage(named: "yel_light")
+    @State private var selectedImage: UIImage? = UIImage(named: "lands") // Placeholder image
+    @State private var textureImage: UIImage? = UIImage(named: "retro1_texture")
     @State private var textureImage2: UIImage? = UIImage(named: "yel_light")
     
     // Your texture image

@@ -9,6 +9,11 @@ import Foundation
 import UIKit
 import FirebaseStorage
 import SwiftUI
+import PixelEnginePackage
+import AVFoundation
+import CoreMedia
+import Vision
+import VideoToolbox
 
 func uploadImageToFirebase(image: UIImage, imageName: String, completion: @escaping (Result<String, Error>) -> Void) {
     // Convert the UIImage to JPEG data with compression quality
@@ -141,18 +146,53 @@ extension UIImage {
     }
 }
 
+// Function to get font based on the name format "colorStyle-1", "colorStyle-2", etc.
+func getFont(from filterColorCube: FilterColorCube) -> String {
+    // Extract the colorStyle part (before the dash) from the name
+    let components = filterColorCube.name.split(separator: "-")
+    guard let colorStyleRawValue = components.first else {
+        return "VCROSDMono"  // Default font if the format is not correct
+    }
+    
+    // Attempt to convert the extracted part to a ColorStyle enum
+    if let colorStyle = ColorStyle(rawValue: String(colorStyleRawValue)) {
+        switch colorStyle {
+        case .film:
+            return "Calculatrix-7"
+        case .retro:
+            return "Minolta-Classic"
+        default:
+            return "VCROSDMono"
+        }
+    } else {
+        // Default font if no matching ColorStyle is found
+        return "VCROSDMono"
+    }
+}
+
 extension UIImage {
     func addText(atPoint point: CGPoint, color: UIColor) -> UIImage {
         let scale = UIScreen.main.scale
         UIGraphicsBeginImageContextWithOptions(self.size, false, scale)
-        let fontSize = self.size.height * 0.025 // Adjust this proportion as needed
-       
-        let fontCustom = UIFont(name: "calculatrix-7", size: fontSize)
-        
+        let fontSize = self.size.height * 0.05 // Adjust this proportion as needed
+        var fontString = ""
+        if let cube = AppState.shared.cubeSelected {
+            fontString = getFont(from: cube)
+        }
+        var fontCustom = UIFont(name: fontString, size: fontSize)
+        if fontSize.isNaN {
+            fontCustom = .systemFont(ofSize: fontSize, weight: .bold)
+        }
+        for family in UIFont.familyNames {
+            print("Font family: \(family)")
+            for names in UIFont.fontNames(forFamilyName: family) {
+                print("Font name: \(names)")
+            }
+        }
         let dateFormatter = DateFormatter()
         
         // Choose one of the formats above
-        dateFormatter.dateFormat = "dd MMM yyyy, HH:mm"  // Classic print style example
+        dateFormatter.dateFormat = "dd MMM yy"  // Classic print style example
         let text =  dateFormatter.string(from: Date())
         // Draw the original image as the base
         self.draw(in: CGRect(origin: .zero, size: self.size))
@@ -209,10 +249,13 @@ func cropImageToAspectRatio(image: UIImage, aspectRatio: AspectRatio) -> UIImage
         targetAspectRatio = 4.0 / 3.0
     case .ratio9_16:
         targetAspectRatio = 16.0 / 9.0
+    case .ratio1_1:
+        targetAspectRatio = 1
+        
     }
-    
+    if targetAspectRatio == 1 {return image}
     // Step 2: Handle portrait or landscape mode
-    let isPortrait = originalSize.height > originalSize.width
+    let isPortrait = originalSize.height >= originalSize.width
     if isPortrait {
         // Swap aspect ratio if in portrait
         targetAspectRatio = 1.0 / targetAspectRatio
@@ -338,4 +381,17 @@ extension UIImage {
         return resizedImage.padToSquare(targetSize: targetSize)
     }
     
+}
+extension UIImage {
+    static func initFrom(pixelBuffer: CVPixelBuffer,orientation:  UIImage.Orientation) -> UIImage? {
+        var cgImage: CGImage?
+        VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
+        
+        if let cgImage = cgImage {
+            let image = UIImage(cgImage: cgImage, scale: 1, orientation: orientation)
+            return image
+        } else {
+            return nil
+        }
+    }
 }
