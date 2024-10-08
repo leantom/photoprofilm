@@ -22,7 +22,7 @@ struct LoadingView: View {
                         .resizable()
                         .indicator(.activity) // Show an activity indicator while loading
                         .scaledToFit()
-                        .frame(width: UIDevice.current.userInterfaceIdiom == .pad ? 120 : 60, height: UIDevice.current.userInterfaceIdiom == .pad ? 60 : 30)
+                        .frame(width: UIDevice.current.userInterfaceIdiom == .pad ? 120 : 90, height: UIDevice.current.userInterfaceIdiom == .pad ? 60 : 30)
                         .clipped()
                     
                 }

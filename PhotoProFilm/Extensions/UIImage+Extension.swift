@@ -174,26 +174,25 @@ extension UIImage {
     func addText(atPoint point: CGPoint, color: UIColor) -> UIImage {
         let scale = UIScreen.main.scale
         UIGraphicsBeginImageContextWithOptions(self.size, false, scale)
-        let fontSize = self.size.height * 0.05 // Adjust this proportion as needed
+        
+        // Adjust font size based on the width of the image
+        let fontSize = self.size.width * 0.05 // Adjust the proportion as needed
+
         var fontString = ""
         if let cube = AppState.shared.cubeSelected {
             fontString = getFont(from: cube)
         }
+        
+        // Ensure the font is valid, fallback to system font if not available
         var fontCustom = UIFont(name: fontString, size: fontSize)
-        if fontSize.isNaN {
+        if fontCustom == nil {
             fontCustom = .systemFont(ofSize: fontSize, weight: .bold)
         }
-        for family in UIFont.familyNames {
-            print("Font family: \(family)")
-            for names in UIFont.fontNames(forFamilyName: family) {
-                print("Font name: \(names)")
-            }
-        }
-        let dateFormatter = DateFormatter()
         
-        // Choose one of the formats above
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MMM yy"  // Classic print style example
-        let text =  dateFormatter.string(from: Date())
+        let text = dateFormatter.string(from: Date())
+        
         // Draw the original image as the base
         self.draw(in: CGRect(origin: .zero, size: self.size))
         
@@ -201,16 +200,16 @@ extension UIImage {
         let textFontAttributes = [
             NSAttributedString.Key.font: fontCustom as Any,
             NSAttributedString.Key.foregroundColor: color
-        ] as [NSAttributedString.Key : Any]
+        ] as [NSAttributedString.Key: Any]
         
-        // Calculate the bounding box for the text to ensure it fits well
-        let textSize = text.size(withAttributes: textFontAttributes as [NSAttributedString.Key : Any])
+        // Calculate the bounding box for the text
+        let textSize = text.size(withAttributes: textFontAttributes)
         
-        // Position text near the bottom with a bit of margin
+        // Position text near the specified point
         let textRect = CGRect(x: point.x, y: point.y, width: textSize.width, height: textSize.height)
         
         // Draw the text onto the image
-        text.draw(in: textRect, withAttributes: textFontAttributes as [NSAttributedString.Key : Any])
+        text.draw(in: textRect, withAttributes: textFontAttributes)
         
         // Get the new image with the text added
         let newImage = UIGraphicsGetImageFromCurrentImageContext()

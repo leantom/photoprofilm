@@ -46,6 +46,8 @@ struct EditPhotoCameraView: View {
     @State var isSelectedPhoto: Bool = false
     @State private var isShowAds: Bool = false
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    @State var isExportedDone: Bool = false
+    var listBW: [BWFilter] = [classicBW, highContrastBW, softDreamyBW, moodyDarkBW, filmNoirBW, filmNoirBW2]
     
     let imageWidth = UIScreen.main.bounds.width * 0.11 // Set width to 20% of screen width
     @State var imageHeight = UIScreen.main.bounds.width * 0.11 // Calculate height based on 5:7 ratio
@@ -88,11 +90,20 @@ struct EditPhotoCameraView: View {
                         Spacer()
                         
                         Button {
-                            isSelectRatio.toggle()
+                           //MARK: -- download
+                            if let photo = self.afterFilterImage {
+                                saveImageToPhotoAlbum(image: photo)
+                            }
+                            isExportedDone = true
+                            
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                isExportedDone = false
+                            }
                         } label: {
-                            Image(systemName: isSelectRatio ? "chevron.down" : "chevron.up")
-                                .font(.system(size: 20, weight: .regular))
-                                .foregroundStyle(isSelectRatio ? .yellow : .white)
+                            Image("icon-download")
+                                .resizable()
+                                .frame(width: 30, height: 30)
                         }
                         .frame(width: 50, height: 40)
                         
@@ -117,7 +128,6 @@ struct EditPhotoCameraView: View {
                         }
                         .frame(width: 50, height: 40)
                     }
-                    .background(.red)
                     Spacer()
                     if isSelectRatio == false {
                         VStack {
@@ -145,30 +155,42 @@ struct EditPhotoCameraView: View {
                                     
                                     
                                     ForEach(listCinematic) { cinematic in
-                                        Image(cinematic.name)
-                                            .resizable()
-                                            .foregroundColor(.white)
-                                            .frame(width: imageWidth, height: imageHeight)
-                                            .cornerRadius(10)
-                                            .clipped()
-                                            .scaleEffect(cubeSelected?.name == cinematic.name ? 1.1 : 1.0)
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 10)
-                                                    .stroke(cubeSelected?.name == cinematic.name ? Color.yellow : Color.clear, lineWidth: 1)
-                                            )
-                                        
-                                            .onTapGesture {
-                                                var cube = FilterColorCube(name: cinematic.name, identifier: cinematic.identifier, lutImage: UIImage(named: cinematic.lutImage)!, dimension: 64)
-                                                if cube.name.contains("BW") {
-                                                    cube.amount = 0.5
+                                        ZStack {
+                                            Image(cinematic.name)
+                                                .resizable()
+                                                .foregroundColor(.white)
+                                                .frame(width: imageWidth, height: imageHeight)
+                                                .cornerRadius(10)
+                                                .clipped()
+                                                .scaleEffect(cubeSelected?.name == cinematic.name ? 1.1 : 1.0)
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 10)
+                                                        .stroke(cubeSelected?.name == cinematic.name ? Color.yellow : Color.clear, lineWidth: 1)
+                                                )
+                                            
+                                                .onTapGesture {
+                                                    var cube = FilterColorCube(name: cinematic.name, identifier: cinematic.identifier, lutImage: UIImage(named: cinematic.lutImage)!, dimension: 64)
+                                                    if cube.name.contains("BW") {
+                                                        cube.amount = 0.5
+                                                    }
+                                                    withAnimation {
+                                                        self.cubeSelected = cube
+                                                        AppState.shared.cubeSelected = cube
+                                                        applyPhoto()
+                                                    }
+                                                    
                                                 }
-                                                withAnimation {
-                                                    self.cubeSelected = cube
-                                                    AppState.shared.cubeSelected = cube
-                                                    applyPhoto()
-                                                }
-                                                
+                                            if cinematic.isHot {
+                                                Text("H")
+                                                    .font(.system(size: 10, weight: .bold))
+                                                    .frame(width: 20, height: 20)
+                                                    .background(.red.opacity(0.65))
+                                                    .clipShape(Circle())
+                                                    .foregroundStyle(.white)
+                                                    .offset(x: 15,y: -25)
                                             }
+                                        }
+                                        
                                     }
                                 }
                                 .padding([.leading, .trailing], 10)
@@ -203,7 +225,24 @@ struct EditPhotoCameraView: View {
                         isSelectRatio.toggle()
                     }
                 }
-                
+                if isExportedDone {
+                    Button(action: {
+                        // Action for the button
+                    }) {
+                        HStack {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(.white)
+                            Text("Saved to gallery")
+                                .foregroundColor(.white)
+                                .font(.system(size: 16, weight: .semibold))
+                        }
+                        .padding()
+                        .background(Color.purple)
+                        .cornerRadius(12)
+                        .shadow(radius: 5)
+                    }
+                    .transition(.opacity)
+                }
             }
         }
         .background(.black)
@@ -280,7 +319,7 @@ struct EditPhotoCameraView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             isLoading = false
         }
-        guard let image = self.image else { return }
+        guard let image = self.inputImage else { return }
         
         guard let cube = cubeSelected else {return}
         
@@ -289,6 +328,8 @@ struct EditPhotoCameraView: View {
         
         if cube.name.contains("retro") {
            newImage = applyPhotoToRetro(ciiImage: convertCiimage)
+        } else if cube.name.contains("BW") {
+            newImage = applyPhotoToBW(ciiImage: convertCiimage)
         } else {
             let ciiImage = cube.apply(to: convertCiimage, sourceImage: convertCiimage)
             guard  let cgImage = convertCIImageToCGImage(ciImage: ciiImage) else {return}
@@ -327,6 +368,39 @@ struct EditPhotoCameraView: View {
                 
             }
             return nil
+        }
+        return nil
+    }
+    
+    func applyPhotoToBW(ciiImage: CIImage) -> UIImage? {
+        guard let cube = cubeSelected else {return nil}
+        let bwFilterObject = listBW.first { $0.name == cube.name }
+        guard let bwFilterObject else { return nil}
+        
+        let bwFilter = CIFilter.photoEffectMono()
+        
+        bwFilter.inputImage = ciiImage
+        
+        if let bwImage = bwFilter.outputImage {
+            // Step 2: Adjust Brightness and Contrast
+            let brightnessAndContrastFilter = CIFilter.colorControls()
+            brightnessAndContrastFilter.inputImage = bwImage
+            brightnessAndContrastFilter.brightness = bwFilterObject.brightness // Adjust brightness (-1.0 to 1.0)
+            brightnessAndContrastFilter.contrast = bwFilterObject.contrast  // Adjust contrast (0.0 to 4.0)
+            
+            if let brightContrastImage = brightnessAndContrastFilter.outputImage {
+                // Step 3: Adjust Exposure
+                let exposureFilter = CIFilter.exposureAdjust()
+                exposureFilter.inputImage = brightContrastImage
+                exposureFilter.ev = bwFilterObject.exposure // Adjust exposure (-10.0 to 10.0)
+                let context = CIContext()
+                // Step 4: Get the final image
+                if let finalImage = exposureFilter.outputImage,
+                   let cgImage = context.createCGImage(finalImage, from: finalImage.extent) {
+                   let image =  UIImage(cgImage: cgImage)
+                    return image
+                }
+            }
         }
         return nil
     }

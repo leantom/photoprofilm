@@ -100,7 +100,7 @@ class DataColor: ObservableObject {
     public var style: ColorStyle = .basic
     {
         didSet {
-            filterLUT()
+            
         }
     }
     
@@ -115,175 +115,175 @@ class DataColor: ObservableObject {
             )
             
             let retro = Collection(type: .retro, name: "retro", identifier: "retro", cubeInfos: [])
-            for i in 1...4 {
-                let cube = FilterColorCubeInfo(
-                    name: "retro\(i)",
-                    identifier: "retro\(i)",
-                    lutImage: "retro\(i)"
-                )
-                retro.cubeInfos.append(cube)
+            for i in 1...6 {
+                switch i {
+                case 1,4,5:
+                    let cube = FilterColorCubeInfo(
+                        name: "retro\(i)",
+                        identifier: "retro\(i)",
+                        lutImage: "retro\(i)",
+                        isHot: true
+                    )
+                    retro.cubeInfos.append(cube)
+                default:
+                    let cube = FilterColorCubeInfo(
+                        name: "retro\(i)",
+                        identifier: "retro\(i)",
+                        lutImage: "retro\(i)",
+                        isHot: false
+                    )
+                    retro.cubeInfos.append(cube)
+                }
+                
             }
             collections.append(retro)
             
             let basic = Collection(type: .basic, name: "Basic", identifier: "Basic", cubeInfos: [])
             for i in 1...3 {
-                let cube = FilterColorCubeInfo(
-                    name: "A\(i)",
-                    identifier: "basic-\(i)",
-                    lutImage: "lut-\(i)"
-                )
-                basic.cubeInfos.append(cube)
+                switch i {
+                case 3:
+                    let cube = FilterColorCubeInfo(
+                        name: "A\(i)",
+                        identifier: "basic-\(i)",
+                        lutImage: "lut-\(i)",
+                        isHot: true
+                    )
+                    basic.cubeInfos.append(cube)
+                default:
+                    let cube = FilterColorCubeInfo(
+                        name: "A\(i)",
+                        identifier: "basic-\(i)",
+                        lutImage: "lut-\(i)",
+                        isHot: false
+                    )
+                    basic.cubeInfos.append(cube)
+                }
+               
+               
             }
             collections.append(basic)
             
             let cinematic = Collection(type: .cinematic, name: "Cinematic", identifier: "Cinematic", cubeInfos: [])
             for i in 1...10 {
-                let cube = FilterColorCubeInfo(
-                    name: "C\(i)",
-                    identifier: "Cinematic-\(i)",
-                    lutImage: "cinematic-\(i)"
-                )
-                cinematic.cubeInfos.append(cube)
+                switch i {
+                case 2,5,10:
+                    let cube = FilterColorCubeInfo(
+                        name: "C\(i)",
+                        identifier: "Cinematic-\(i)",
+                        lutImage: "cinematic-\(i)",
+                        isHot: true
+                    )
+                    cinematic.cubeInfos.append(cube)
+                default :
+                    let cube = FilterColorCubeInfo(
+                        name: "C\(i)",
+                        identifier: "Cinematic-\(i)",
+                        lutImage: "cinematic-\(i)",
+                        isHot: false
+                    )
+                    cinematic.cubeInfos.append(cube)
+                }
+                
             }
             collections.append(cinematic)
             
             let film = Collection(type: .film, name: "Film", identifier: "Film", cubeInfos: [])
             for i in 1...6 {
-                let cube = FilterColorCubeInfo(
-                    name: "Film\(i)",
-                    identifier: "Film-\(i)",
-                    lutImage: "film-\(i)"
-                )
-                film.cubeInfos.append(cube)
+                switch i {
+                case 2,4:
+                    let cube = FilterColorCubeInfo(
+                        name: "Film\(i)",
+                        identifier: "Film-\(i)",
+                        lutImage: "film-\(i)",
+                        isHot: true
+                    )
+                    film.cubeInfos.append(cube)
+                default:
+                    let cube = FilterColorCubeInfo(
+                        name: "Film\(i)",
+                        identifier: "Film-\(i)",
+                        lutImage: "film-\(i)",
+                        isHot: false
+                    )
+                    film.cubeInfos.append(cube)
+                }
+            
             }
             collections.append(film)
             
             let selfie = Collection(type: .selfie, name: "Selfie", identifier: "Selfie", cubeInfos: [])
             for i in 1...10 {
-                let cube = FilterColorCubeInfo(
-                    name: "Selfie\(i)",
-                    identifier: "Selfie-\(i)",
-                    lutImage: "selfie-\(i)"
-                )
-                selfie.cubeInfos.append(cube)
+                switch i {
+                case 2,5,10:
+                    let cube = FilterColorCubeInfo(
+                        name: "Selfie\(i)",
+                        identifier: "Selfie-\(i)",
+                        lutImage: "selfie-\(i)",
+                        isHot: true
+                    )
+                    selfie.cubeInfos.append(cube)
+                default:
+                    let cube = FilterColorCubeInfo(
+                        name: "Selfie\(i)",
+                        identifier: "Selfie-\(i)",
+                        lutImage: "selfie-\(i)",
+                        isHot: false
+                    )
+                    selfie.cubeInfos.append(cube)
+                }
+                
             }
             collections.append(selfie)
             
             let tan = Collection(type: .scene, name: "Tan", identifier: "Tan", cubeInfos: [])
             for i in 1...10 {
-                let cube = FilterColorCubeInfo(
-                    name: "lut\(i)",
-                    identifier: "lut-\(i)",
-                    lutImage: "lut-\(i)"
-                )
-                tan.cubeInfos.append(cube)
+                switch i {
+                    case 2,6,8,10:
+                    let cube = FilterColorCubeInfo(
+                        name: "lut\(i)",
+                        identifier: "lut-\(i)",
+                        lutImage: "lut-\(i)",
+                        isHot: true
+                    )
+                    tan.cubeInfos.append(cube)
+                default:
+                    let cube = FilterColorCubeInfo(
+                        name: "lut\(i)",
+                        identifier: "lut-\(i)",
+                        lutImage: "lut-\(i)",
+                        isHot: false
+                    )
+                    tan.cubeInfos.append(cube)
+                }
             }
             collections.append(tan)
             
             let bw = Collection(type: .BW, name: "BW", identifier: "BW", cubeInfos: [])
             for i in 1...6 {
-                let cube = FilterColorCubeInfo(
-                    name: "BW\(i)",
-                    identifier: "BW\(i)",
-                    lutImage: "BW\(i)"
-                )
-                bw.cubeInfos.append(cube)
+                switch i {
+                case 1,5:
+                    let cube = FilterColorCubeInfo(
+                        name: "BW\(i)",
+                        identifier: "BW\(i)",
+                        lutImage: "BW\(i)",
+                        isHot: true
+                    )
+                    bw.cubeInfos.append(cube)
+                default:
+                    let cube = FilterColorCubeInfo(
+                        name: "BW\(i)",
+                        identifier: "BW\(i)",
+                        lutImage: "BW\(i)",
+                        isHot: false
+                    )
+                    bw.cubeInfos.append(cube)
+                }
+                
             }
             collections.append(bw)
             
             
         }
-    }
-    
-    func filterLUT() {
-        collectionsSelected = []
-        switch style {
-        case .basic:
-            // basic
-            let basic = Collection(type: .basic, name: "Basic", identifier: "Basic", cubeInfos: [])
-            for i in 1...3 {
-                let cube = FilterColorCubeInfo(
-                    name: "A\(i)",
-                    identifier: "basic-\(i)",
-                    lutImage: "lut-\(i)"
-                )
-                basic.cubeInfos.append(cube)
-            }
-            collectionsSelected.append(basic)
-        case .cinematic:
-            // Cinematic
-            let cinematic = Collection(type: .cinematic, name: "Cinematic", identifier: "Cinematic", cubeInfos: [])
-            for i in 1...10 {
-                let cube = FilterColorCubeInfo(
-                    name: "C\(i)",
-                    identifier: "Cinematic-\(i)",
-                    lutImage: "cinematic-\(i)"
-                )
-                cinematic.cubeInfos.append(cube)
-            }
-            collectionsSelected.append(cinematic)
-        case .film:
-            // Film
-            let film = Collection(type: .film, name: "Film", identifier: "Film", cubeInfos: [])
-            for i in 1...6 {
-                let cube = FilterColorCubeInfo(
-                    name: "Film\(i)",
-                    identifier: "Film-\(i)",
-                    lutImage: "film-\(i)"
-                )
-                film.cubeInfos.append(cube)
-            }
-            collectionsSelected.append(film)
-        case .selfie:
-            // Selfie Good Skin
-            let selfie = Collection(type: .selfie, name: "Selfie", identifier: "Selfie", cubeInfos: [])
-            for i in 1...10 {
-                let cube = FilterColorCubeInfo(
-                    name: "Selfie\(i)",
-                    identifier: "Selfie-\(i)",
-                    lutImage: "selfie-\(i)"
-                )
-                selfie.cubeInfos.append(cube)
-            }
-            collectionsSelected.append(selfie)
-        case .scene:
-            // Tan
-            let tan = Collection(type: .scene, name: "Tan", identifier: "Tan", cubeInfos: [])
-            for i in 1...10 {
-                let cube = FilterColorCubeInfo(
-                    name: "lut\(i)",
-                    identifier: "lut-\(i)",
-                    lutImage: "lut-\(i)"
-                )
-                tan.cubeInfos.append(cube)
-            }
-            collectionsSelected.append(tan)
-        case .BW:
-            let tan = Collection(type: .BW, name: "BW", identifier: "BW", cubeInfos: [])
-            for i in 1...6 {
-                let cube = FilterColorCubeInfo(
-                    name: "BW\(i)",
-                    identifier: "BW\(i)",
-                    lutImage: "BW\(i)"
-                )
-                tan.cubeInfos.append(cube)
-            }
-            collectionsSelected.append(tan)
-        case .retro:
-            let retro = Collection(type: .retro, name: "retro", identifier: "retro", cubeInfos: [])
-            for i in 1...4 {
-                let cube = FilterColorCubeInfo(
-                    name: "retro\(i)",
-                    identifier: "retro\(i)",
-                    lutImage: "retro\(i)"
-                )
-                retro.cubeInfos.append(cube)
-            }
-            collectionsSelected.append(retro)
-        case .neutral:
-            break
-        }
-        
     }
     
     var neutralLUT: UIImage!

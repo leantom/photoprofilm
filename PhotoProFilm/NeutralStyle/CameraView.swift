@@ -27,7 +27,7 @@ struct CameraApplyView: View {
     @State var listCinematic: [FilterColorCubeInfo] = []
     @State var cubeSelected: FilterColorCube?
     @State var styleSelected: Collection?
-    @State var aspectRatio: AspectRatio = .ratio9_16 // Default aspect ratio
+    @State var aspectRatio: AspectRatio = .ratio4_3
     
     @State var isStopCamera = false
     @State var isSelectRatio = false
@@ -58,7 +58,6 @@ struct CameraApplyView: View {
                             .aspectRatio(contentMode: .fill)
                             .clipped()
                     } else {
-                        
                         LoadingView()
                     }
                     
@@ -79,11 +78,10 @@ struct CameraApplyView: View {
                 HStack {
                     // Flash button (left icon)
                     Button(action: {
-                        // Flash action here
-                        isEditPhoto = true
+                       
                     }) {
 
-                        Text(isEditPhoto ? "Edit" : "Photo")
+                        Text("Photo")
                             .font(.system(size: 13, weight: .regular, design: .monospaced))
                             .foregroundColor(isEditPhoto ? .yellow :.white)
                         
@@ -142,31 +140,43 @@ struct CameraApplyView: View {
                         ScrollView(.horizontal, showsIndicators: false) {
                             LazyHGrid(rows: [GridItem(.fixed(100))],  spacing: 20) {
                                 
-                                
                                 ForEach(listCinematic) { cinematic in
-                                    Image(cinematic.name)
-                                        .resizable()
-                                        .foregroundColor(.white)
-                                        .frame(width: imageWidth, height: imageHeight)
-                                        .cornerRadius(10)
-                                        .clipped()
-                                        .scaleEffect(cubeSelected?.name == cinematic.name ? 1.1 : 1.0)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .stroke(cubeSelected?.name == cinematic.name ? Color.yellow : Color.clear, lineWidth: 1)
-                                        )
                                     
-                                        .onTapGesture {
-                                            var cube = FilterColorCube(name: cinematic.name, identifier: cinematic.identifier, lutImage: UIImage(named: cinematic.lutImage)!, dimension: 64)
-                                            if cube.name.contains("BW") {
-                                                cube.amount = 0.5
+                                    ZStack {
+                                        Image(cinematic.name)
+                                            .resizable()
+                                            .foregroundColor(.white)
+                                            .frame(width: imageWidth, height: imageHeight)
+                                            .cornerRadius(10)
+                                            .clipped()
+                                            .scaleEffect(cubeSelected?.name == cinematic.name ? 1.1 : 1.0)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .stroke(cubeSelected?.name == cinematic.name ? Color.yellow : Color.clear, lineWidth: 1)
+                                            )
+                                        
+                                            .onTapGesture {
+                                                var cube = FilterColorCube(name: cinematic.name, identifier: cinematic.identifier, lutImage: UIImage(named: cinematic.lutImage)!, dimension: 64)
+                                                if cube.name.contains("BW") {
+                                                    cube.amount = 0.5
+                                                }
+                                                withAnimation {
+                                                    self.cubeSelected = cube
+                                                    AppState.shared.cubeSelected = cube
+                                                }
+                                                
                                             }
-                                            withAnimation {
-                                                self.cubeSelected = cube
-                                                AppState.shared.cubeSelected = cube
-                                            }
-                                            
+                                        if cinematic.isHot {
+                                            Text("H")
+                                                .font(.system(size: 10, weight: .bold))
+                                                .frame(width: 20, height: 20)
+                                                .background(.red.opacity(0.65))
+                                                .clipShape(Circle())
+                                                .foregroundStyle(.white)
+                                                .offset(x: 15,y: -25)
                                         }
+                                       
+                                    }
                                 }
                             }
                             .padding([.leading, .trailing], 10)
@@ -254,12 +264,22 @@ struct CameraApplyView: View {
                         }
                         .frame(width: 50, height: 50)
                         
-                        Button(action: {
-                            isSelectedPhoto.toggle()
-                        }) {
-                            Image("img_media")
+                        ZStack {
+                            Button(action: {
+                                isSelectedPhoto.toggle()
+                            }) {
+                                Image("img_media")
+                            }
+                            .frame(width: 50, height: 50)
+                            
+                            Text("N")
+                                .font(.system(size: 10, weight: .bold))
+                                .frame(width: 20, height: 20)
+                                .background(.red)
+                                .clipShape(Circle())
+                                .foregroundStyle(.white)
+                                .offset(x: 10,y: -15)
                         }
-                        .frame(width: 50, height: 50)
                     }
                     .padding(.bottom, 20)
                 }

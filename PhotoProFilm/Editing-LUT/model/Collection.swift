@@ -105,16 +105,20 @@ public struct FilterColorCubeInfo : Equatable, Identifiable {
     public let name: String
     public let identifier: String
     public let lutImage:String
+    public var isHot:Bool = false
+    
     
     public init(
         name: String,
         identifier: String,
-        lutImage: String
+        lutImage: String,
+        isHot:Bool
     ) {
         self.name = name
         self.identifier = identifier
         self.lutImage = lutImage
         id = UUID().uuidString
+        self.isHot = isHot
     }
     
     func getFilter()-> FilterColorCube{

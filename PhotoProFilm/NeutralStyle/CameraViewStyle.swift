@@ -11,13 +11,13 @@ import CoreImage.CIFilterBuiltins
 import CoreML
 import Vision
 import PixelEnginePackage
-
+import CoreMotion
 let classicBW = BWFilter(name: "BW1", brightness: 0.0, contrast: 1.5, exposure: 0.0)
 let highContrastBW = BWFilter(name: "BW2", brightness: 0.0, contrast: 3.0, exposure: 0.0)
 let softDreamyBW = BWFilter(name: "BW3", brightness: 0.2, contrast: 1.2, exposure: 0.5)
 let moodyDarkBW = BWFilter(name: "BW4", brightness: -0.2, contrast: 1.8, exposure: -0.5)
 let filmNoirBW = BWFilter(name: "BW5", brightness: -0.1, contrast: 2.5, exposure: -0.3)
-let filmNoirBW2 = BWFilter(name: "BW6", brightness: -0.1, contrast: 2.5, exposure: -0.5)
+let filmNoirBW2 = BWFilter(name: "BW6", brightness: -0.1, contrast: 1.5, exposure: -0.5)
 
 struct CameraView: UIViewRepresentable {
     @Binding var image: UIImage?
@@ -70,9 +70,12 @@ struct CameraView: UIViewRepresentable {
         var captureSession: AVCaptureSession!
         var previewLayer: AVCaptureVideoPreviewLayer!
         var videoOutput: AVCaptureVideoDataOutput!
+        
         let context = CIContext()
         var currentDevice: AVCaptureDevice?
         var isFlasOn: Bool = false
+        var motionManager: CMMotionManager!
+        var currentOrientation: UIDeviceOrientation = .portrait
         
         init(parent: CameraView) {
             self.parent = parent
@@ -145,7 +148,7 @@ struct CameraView: UIViewRepresentable {
                 
                 do {
                     try device.lockForConfiguration()
-                        
+                    
                     if isOn && device.isTorchAvailable {
                         device.torchMode = .on // Turn the torch on
                     } else {
@@ -197,30 +200,48 @@ struct CameraView: UIViewRepresentable {
             }
         }
         
+        func imageOrientation(from deviceOrientation: UIDeviceOrientation, isFrontCamera: Bool) -> UIImage.Orientation {
+            switch deviceOrientation {
+            case .portrait:
+                return isFrontCamera ? .leftMirrored : .right
+            case .portraitUpsideDown:
+                return isFrontCamera ? .rightMirrored : .left
+            case .landscapeLeft:
+                return isFrontCamera ? .downMirrored : .up
+            case .landscapeRight:
+                return isFrontCamera ? .upMirrored : .down
+            default:
+                return .up
+            }
+        }
+        
         func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
             guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
             let cameraImage = CIImage(cvPixelBuffer: pixelBuffer)
-//            
-//            let config = MLModelConfiguration()
-//            config.computeUnits = .all
-//            var s : MLModel?
-//            s = try? colorful.init(configuration: config).model
-//            guard let styleModel = s else{return}
-//            guard let model = try? VNCoreMLModel(for: styleModel) else { return }
-//            let request = VNCoreMLRequest(model: model) { (finishedRequest, error) in
-//                guard let results = finishedRequest.results as? [VNPixelBufferObservation] else { return }
-//
-//                guard let observation = results.first else { return }
-//
-//                DispatchQueue.main.async(execute: {
-//                    let orientation = self.getCorrectImageOrientation()
-//                    let image = UIImage.initFrom(pixelBuffer: observation.pixelBuffer, orientation: orientation)
-//                    self.parent.image = image
-//                })
-//            }
-//            
-//            guard let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
-//            try? VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:]).perform([request])
+            //
+            //            let config = MLModelConfiguration()
+            //            config.computeUnits = .all
+            //            var s : MLModel?
+            //            s = try? colorful.init(configuration: config).model
+            //            guard let styleModel = s else{return}
+            //            guard let model = try? VNCoreMLModel(for: styleModel) else { return }
+            //            let request = VNCoreMLRequest(model: model) { (finishedRequest, error) in
+            //                guard let results = finishedRequest.results as? [VNPixelBufferObservation] else { return }
+            //
+            //                guard let observation = results.first else { return }
+            //
+            //                DispatchQueue.main.async(execute: {
+            //                    let orientation = self.getCorrectImageOrientation()
+            //                    let image = UIImage.initFrom(pixelBuffer: observation.pixelBuffer, orientation: orientation)
+            //                    self.parent.image = image
+            //                })
+            //            }
+            //
+            //            guard let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+            //            try? VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:]).perform([request])
+            
+            let imageOrientation = self.imageOrientation(from: currentOrientation, isFrontCamera: parent.isFrontCamera)
+
             
             if let cube = parent.cube {
                 
@@ -250,8 +271,7 @@ struct CameraView: UIViewRepresentable {
                             if let finalImage = exposureFilter.outputImage,
                                let cgImage = context.createCGImage(finalImage, from: finalImage.extent) {
                                 DispatchQueue.main.async {
-                                    let orientation = self.getCorrectImageOrientation()
-                                    self.parent.image = UIImage(cgImage: cgImage, scale: 1, orientation: orientation)
+                                    self.parent.image = UIImage(cgImage: cgImage, scale: 1, orientation: imageOrientation)
                                 }
                             }
                         }
@@ -279,8 +299,7 @@ struct CameraView: UIViewRepresentable {
                             
                             if let cgImage = context.createCGImage(blendedImage, from: blendedImage.extent) {
                                 DispatchQueue.main.async {
-                                    let orientation = self.getCorrectImageOrientation()
-                                    self.parent.image = UIImage(cgImage: cgImage, scale: 1, orientation: orientation)
+                                    self.parent.image = UIImage(cgImage: cgImage, scale: 1, orientation: imageOrientation)
                                 }
                             }
                         }
@@ -288,21 +307,18 @@ struct CameraView: UIViewRepresentable {
                     }
                 }
                 
-                
                 let filteredImage = cube.apply(to: cameraImage, sourceImage: cameraImage)
                 
                 if let cgImage = context.createCGImage(filteredImage, from: filteredImage.extent) {
                     DispatchQueue.main.async {
-                        let orientation = self.getCorrectImageOrientation()
-                        self.parent.image = UIImage(cgImage: cgImage, scale: 1, orientation: orientation)
+                        self.parent.image = UIImage(cgImage: cgImage, scale: 1, orientation: imageOrientation)
                     }
                 }
             } else {
                 // Display unfiltered camera image
                 if let cgImage = context.createCGImage(cameraImage, from: cameraImage.extent) {
                     DispatchQueue.main.async {
-                        let orientation = self.getCorrectImageOrientation()
-                        self.parent.image = UIImage(cgImage: cgImage, scale: 1, orientation: orientation)
+                        self.parent.image = UIImage(cgImage: cgImage, scale: 1, orientation: imageOrientation)
                     }
                 }
             }
