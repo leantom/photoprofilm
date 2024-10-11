@@ -13,6 +13,8 @@
 		F914A5432C295BAE00CE1C65 /* ScrollNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F914A5422C295BAE00CE1C65 /* ScrollNumberView.swift */; };
 		F9167D212CABE4FA000826F4 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9167D202CABE4F4000826F4 /* CameraView.swift */; };
 		F9167D292CAC12E2000826F4 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9167D282CAC12DF000826F4 /* LoadingView.swift */; };
+		F92674932CB8C534005C57CB /* Mantis in Frameworks */ = {isa = PBXBuildFile; productRef = F92674922CB8C534005C57CB /* Mantis */; };
+		F92674952CB8C6AB005C57CB /* ImageCropper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F92674942CB8C6A1005C57CB /* ImageCropper.swift */; };
 		F93531A02CAC493300FBB5D8 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = F935319F2CAC493300FBB5D8 /* FirebaseStorage */; };
 		F93531A22CAC50CD00FBB5D8 /* CameraViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93531A12CAC50C200FBB5D8 /* CameraViewStyle.swift */; };
 		F93531A42CAC540000FBB5D8 /* Utils+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93531A32CAC53F900FBB5D8 /* Utils+Extension.swift */; };
@@ -153,6 +155,7 @@
 		F914A5422C295BAE00CE1C65 /* ScrollNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollNumberView.swift; sourceTree = "<group>"; };
 		F9167D202CABE4F4000826F4 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		F9167D282CAC12DF000826F4 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		F92674942CB8C6A1005C57CB /* ImageCropper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropper.swift; sourceTree = "<group>"; };
 		F93531A12CAC50C200FBB5D8 /* CameraViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewStyle.swift; sourceTree = "<group>"; };
 		F93531A32CAC53F900FBB5D8 /* Utils+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Utils+Extension.swift"; sourceTree = "<group>"; };
 		F93531A52CAC588700FBB5D8 /* ControlPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelView.swift; sourceTree = "<group>"; };
@@ -283,6 +286,7 @@
 				F9E9760A2CAE4887005FBED6 /* FirebaseAnalyticsSwift in Frameworks */,
 				F94E536D2C329339000A7AB7 /* GoogleSignInSwift in Frameworks */,
 				F9E528722C328EFB00AEE86C /* FirebasePerformance in Frameworks */,
+				F92674932CB8C534005C57CB /* Mantis in Frameworks */,
 				F9E528682C328EFB00AEE86C /* FirebaseAuth in Frameworks */,
 				F98266D72C92E8FA0074DCC5 /* GoogleMobileAds in Frameworks */,
 				F9A3BE2B2CAD67BE000A93AF /* FirebaseRemoteConfig in Frameworks */,
@@ -333,6 +337,7 @@
 				F9167D202CABE4F4000826F4 /* CameraView.swift */,
 				F97A965B2C2D64FB00C30ABE /* EditPhotoView.swift */,
 				F9D1CAEF2CB3DF1900E7E382 /* EditPhotoCameraView.swift */,
+				F92674942CB8C6A1005C57CB /* ImageCropper.swift */,
 				F97A96612C2D6CD100C30ABE /* ImageClassifier.swift */,
 				F98A7F042C31BAB30029DFB8 /* ExportChooseSizeView.swift */,
 			);
@@ -695,6 +700,7 @@
 				F935319F2CAC493300FBB5D8 /* FirebaseStorage */,
 				F9A3BE2A2CAD67BE000A93AF /* FirebaseRemoteConfig */,
 				F9E976092CAE4887005FBED6 /* FirebaseAnalyticsSwift */,
+				F92674922CB8C534005C57CB /* Mantis */,
 			);
 			productName = PhotoProFilm;
 			productReference = F99D4D142BF1F4EE003CA835 /* PhotoProFilm.app */;
@@ -731,6 +737,7 @@
 				F9E528642C328EFB00AEE86C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				F94E53692C329339000A7AB7 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				F98266D52C92E8FA0074DCC5 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				F92674912CB8C534005C57CB /* XCRemoteSwiftPackageReference "Mantis" */,
 			);
 			productRefGroup = F99D4D152BF1F4EE003CA835 /* Products */;
 			projectDirPath = "";
@@ -852,6 +859,7 @@
 				F9167D212CABE4FA000826F4 /* CameraView.swift in Sources */,
 				F9D1CAF02CB3DF2700E7E382 /* EditPhotoCameraView.swift in Sources */,
 				F94E53772C329513000A7AB7 /* FireStoreDatabase.swift in Sources */,
+				F92674952CB8C6AB005C57CB /* ImageCropper.swift in Sources */,
 				F914A5432C295BAE00CE1C65 /* ScrollNumberView.swift in Sources */,
 				F90F592F2C3269DF0026B7C9 /* SplashScreenModel.swift in Sources */,
 				F9AD3A6B2C228A7400BFBF9D /* CategoryImageView.swift in Sources */,
@@ -996,6 +1004,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = RELEASE;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1030,7 +1039,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7;
+				MARKETING_VERSION = 1.8;
 				PRODUCT_BUNDLE_IDENTIFIER = vn.cyme.PhotoProFilm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1073,7 +1082,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7;
+				MARKETING_VERSION = 1.8;
 				PRODUCT_BUNDLE_IDENTIFIER = vn.cyme.PhotoProFilm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1111,6 +1120,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		F92674912CB8C534005C57CB /* XCRemoteSwiftPackageReference "Mantis" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/guoyingtao/Mantis.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.7.5;
+			};
+		};
 		F94E53692C329339000A7AB7 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
@@ -1162,6 +1179,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F92674922CB8C534005C57CB /* Mantis */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F92674912CB8C534005C57CB /* XCRemoteSwiftPackageReference "Mantis" */;
+			productName = Mantis;
+		};
 		F935319F2CAC493300FBB5D8 /* FirebaseStorage */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F9E528642C328EFB00AEE86C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

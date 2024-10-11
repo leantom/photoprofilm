@@ -114,7 +114,6 @@ struct CameraApplyView: View {
                     }
                     .frame(width: 50, height: 50)
                 }
-                .padding()
                 Spacer()
                 if isSelectRatio == false {
                     VStack {
@@ -173,7 +172,7 @@ struct CameraApplyView: View {
                                                 .background(.red.opacity(0.65))
                                                 .clipShape(Circle())
                                                 .foregroundStyle(.white)
-                                                .offset(x: 15,y: -25)
+                                                .offset(x: imageWidth/2 - 10,y: -imageHeight/2)
                                         }
                                        
                                     }
@@ -204,7 +203,7 @@ struct CameraApplyView: View {
                     HStack {
                         Button {
                             if AppState.shared.photoEdit == nil {
-                                AppState.shared.photoEdit = UIImage(imageLiteralResourceName: "img_0013")
+                                return
                             }
                             path.append("savePhoto")
                         } label: {
@@ -216,11 +215,7 @@ struct CameraApplyView: View {
                                     .clipped()
                                     .cornerRadius(10)
                             } else {
-                                Image("img_0013")
-                                    .resizable()
-                                    .frame(width: 50, height: 72)
-                                    .clipped()
-                                    .cornerRadius(10)
+                                Text("")
                             }
                         }
                         .padding(.bottom, 20)
@@ -287,6 +282,7 @@ struct CameraApplyView: View {
                 
             }
             .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: .infinity, alignment: .top)
+            
             .onChange(of: aspectRatio) {  newValue in
                 withAnimation {
                     isSelectRatio.toggle()

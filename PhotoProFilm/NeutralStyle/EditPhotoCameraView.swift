@@ -20,6 +20,8 @@ import CoreML
 import Vision
 import PixelEnginePackage
 import GoogleMobileAds
+import Mantis
+
 struct EditPhotoCameraView: View {
     @State private var image: UIImage?
     @State private var inputImage: UIImage?
@@ -47,6 +49,8 @@ struct EditPhotoCameraView: View {
     @State private var isShowAds: Bool = false
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @State var isExportedDone: Bool = false
+    @State private var showCropper = false
+
     var listBW: [BWFilter] = [classicBW, highContrastBW, softDreamyBW, moodyDarkBW, filmNoirBW, filmNoirBW2]
     
     let imageWidth = UIScreen.main.bounds.width * 0.11 // Set width to 20% of screen width
@@ -87,6 +91,19 @@ struct EditPhotoCameraView: View {
                             
                         }
                         .frame(width: 70, height: 40)
+                        Spacer()
+                        
+
+                        Button(action: {
+                            // Crop action here
+                            showCropper = true
+                        }) {
+                            Image(systemName: "crop")
+                                .font(.system(size: 18))
+                                .foregroundColor(.white)
+                        }
+                        .frame(width: 50, height: 40)
+                        
                         Spacer()
                         
                         Button {
@@ -187,7 +204,7 @@ struct EditPhotoCameraView: View {
                                                     .background(.red.opacity(0.65))
                                                     .clipShape(Circle())
                                                     .foregroundStyle(.white)
-                                                    .offset(x: 15,y: -25)
+                                                    .offset(x: imageWidth/2 - 10,y: -imageHeight/2)
                                             }
                                         }
                                         
@@ -200,7 +217,7 @@ struct EditPhotoCameraView: View {
                         .padding(.bottom, 30)
                     } else {
                         VStack {
-                            Spacer()
+                            
                             
                             ControlPanelView(flashAction: {
                                 
@@ -282,6 +299,9 @@ struct EditPhotoCameraView: View {
         }
         .sheet(isPresented: $isSelectedPhoto, onDismiss: loadImage) {
             CymeImagePicker(image: $image, sourceType: sourceType)
+        }
+        .fullScreenCover(isPresented: $showCropper) {
+            ImageCropper(image: $image)
         }
     }
     

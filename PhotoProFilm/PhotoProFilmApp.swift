@@ -16,6 +16,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = [ "A2F5B28C-683A-4D70-909E-4E3B0D80FA50" ]
         GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = [ "A2F5B28C-683A-4D70-909E-4E3B0D80FA50" ]
 #if RELEASE
+        print("release mode")
         GADMobileAds.sharedInstance().start(completionHandler: nil)
 #endif
         Task {

@@ -1,5 +1,5 @@
 {
-  "originHash" : "56a5e4ebad29e45c1edfa369acdf8e63e5a6d8ecb6baab5770d20406f722e598",
+  "originHash" : "ebcd9af4381798e79d3f6c1e9bb61a48315c55433d3e810c3c73911cf5755d50",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -116,6 +116,15 @@
       "state" : {
         "revision" : "a0bc79961d7be727d258d33d5a6b2f1023270ba1",
         "version" : "1.22.5"
+      }
+    },
+    {
+      "identity" : "mantis",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/guoyingtao/Mantis.git",
+      "state" : {
+        "revision" : "d6880eb97267248f89e6cef2dd52785d50627639",
+        "version" : "1.9.0"
       }
     },
     {
