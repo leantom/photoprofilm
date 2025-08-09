@@ -28,9 +28,9 @@ func filterAll() {
                     return
                 }
                 let processedImage = UIImage(cgImage: cgimage)
-                uploadImageToFirebase(image: processedImage, imageName: cube.name) { result in
-                    
-                }
+//                uploadImageToFirebase(image: processedImage, imageName: cube.name) { result in
+//                    
+//                }
             }
             
         }

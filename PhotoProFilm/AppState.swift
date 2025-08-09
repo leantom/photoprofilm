@@ -33,7 +33,7 @@ class AppState: ObservableObject {
             settings.minimumFetchInterval = 3600 // Fetch every hour
             remoteConfig.configSettings = settings
             remoteConfig.setDefaults(["min_required_version": "1.4" as NSObject])
-        }
+    }
         
         func fetchRemoteConfig() {
             remoteConfig.fetch { [weak self] status, error in
@@ -48,7 +48,7 @@ class AppState: ObservableObject {
         }
         
         func checkAppVersion() {
-            let minRequiredVersion = remoteConfig["min_required_version"].stringValue ?? "1.4"
+            let minRequiredVersion = remoteConfig["min_required_version"].stringValue
             if let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
                 if currentVersion.compare(minRequiredVersion, options: .numeric) == .orderedAscending {
                     // Trigger the force update process
@@ -59,7 +59,7 @@ class AppState: ObservableObject {
         
         private func forceUpdateApp() {
             // Implement the logic to show an alert or modal that forces the user to update the app
-            print("App requires an update to version \(remoteConfig["min_required_version"].stringValue ?? "1.0.0")")
+            print("App requires an update to version \(remoteConfig["min_required_version"].stringValue )")
             DispatchQueue.main.async {
                 self.forceUpdate = true
             }

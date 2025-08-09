@@ -1,9 +1,10 @@
 import SwiftUI
 import CoreImage
 import CoreImage.CIFilterBuiltins
-import Firebase
+import FirebaseAuth
 import NavigationTransitions
 import FirebaseRemoteConfig
+import FirebaseAnalytics
 
 struct ContentView: View {
     @State private var image: Image?
@@ -27,11 +28,8 @@ struct ContentView: View {
                 } else if appState.isLogined && Auth.auth().currentUser != nil {
                     CameraApplyView(path: $path)
                         .navigationBarBackButtonHidden()
-//                    CategoryImageView(path: $path, actionSettingView: {
-//                        path.append("Setting")
-//                    })
                 } else {
-                    LoginView(path: $path, appState: appState)
+                    CameraApplyView(path: $path)
                 }
             }.navigationDestination(for: String.self) { value in
                 switch Screen(rawValue: value) {
@@ -94,6 +92,12 @@ struct ContentView: View {
             .onAppear {
                 appState.isLogined = AppSetting.checkLogined()
                 appState.isFirstInstall = AppSetting.checkisFirstLogined()
+                if appState.isFirstInstall {
+                    Analytics.logEvent("isFirstInstall", parameters: [
+                        "screen_title": "Splash Screen"
+                    ])
+                    
+                }
                 
 
             }

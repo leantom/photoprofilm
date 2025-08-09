@@ -34,6 +34,22 @@ class UserViewModel {
         }
     }
     
+    
+    
+    func createUserNotAsync(user: NewUser)  {
+        let db = Firestore.firestore()
+        let collectionRef = db.collection("users")
+        collectionRef.addDocument(data: ["username": user.username,
+                                                   "email": user.email,
+                                                   "providers": user.providers,
+                                                   "created_at": user.created_at,
+                                                   "last_login_at": user.last_login_at,
+                                                   "userid": user.userid,
+                                                   "avatar": user.avatar])
+        self.currentUser = Auth.auth().currentUser
+    }
+    
+    
     func checkUserExist(userID: String) async -> Bool{
         let db = Firestore.firestore()
         let collectionRef = db.collection("users").whereField("userid", isEqualTo: userID)

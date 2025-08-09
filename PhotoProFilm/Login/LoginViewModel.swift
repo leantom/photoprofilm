@@ -366,6 +366,38 @@ class LoginViewModel: NSObject, ObservableObject {
         
     }
     
+    func signinNotSyncWithAnynomous() {
+        Auth.auth().signInAnonymously { result, error in
+                
+            guard let result = result else {
+                return
+            }
+            
+            // if check exist user
+            
+            let db = Firestore.firestore()
+            let collectionRef = db.collection("users").whereField("userid", isEqualTo: result.user.uid)
+            
+            collectionRef.getDocuments { querySnapshot, error in
+                if let error {
+                    print("Error fetching documents: \(error)")
+                } else {
+                    guard let querySnapshot else { return }
+                    if querySnapshot.isEmpty {
+                        let now = Date().timeIntervalSince1970
+                        let username = self.generateUsername()
+                        
+                        let newUser = NewUser(username: username, email: "\(username)@profilm.com", providers: "anonymous", created_at: now, last_login_at: now, userid: result.user.uid, avatar: self.randomAvatar())
+                        LoginViewModel.shared.userLogin = newUser
+                        UserViewModel.shared.createUserNotAsync(user: newUser)
+                    }
+                    
+                }
+            }
+            
+        }
+    }
+    
     func generateUsername() -> String {
         // Arrays of funny or meme-like adjectives and nouns
         let adjectives = ["Fluffy", "Sassy", "Chunky", "Sleepy", "Derpy", "Spicy", "Grumpy", "Funky", "Wobbly", "Sneaky"]

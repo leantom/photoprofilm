@@ -12,6 +12,7 @@ import CoreImage.CIFilterBuiltins
 import CoreML
 import Vision
 import PixelEnginePackage
+import Firebase
 
 // Enum for Aspect Ratios
 enum AspectRatio {
@@ -44,46 +45,62 @@ struct CameraApplyView: View {
     @State var isSelectedPhoto: Bool = false
     
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    @State private var zoomFactor: CGFloat = 1.0 // Default zoom is 1x
+    
+    @State private var isZoom: Bool = false
+    @State private var focusPoint: CGPoint? = nil
     
     let imageWidth = UIScreen.main.bounds.width * 0.11 // Set width to 20% of screen width
     @State var imageHeight = UIScreen.main.bounds.width * 0.11 // Calculate height based on 5:7 ratio
     @Binding var path: NavigationPath
+    @State private var isZoomSliderVisible: Bool = false
+    @State private var showFocusIndicator: Bool = false // New state for focus indicator
+
     var body: some View {
         ZStack {
-            VStack {
+            // CameraView at the back
+            CameraView(image: $image,
+                       cube: $cubeSelected,
+                       isStopCamera: $isStopCamera,
+                       isFrontCamera: $isFrontCamera,
+                       isFlashOn: $isFlashOn,
+                       zoomFactor: $zoomFactor)
+            .frame(width: UIScreen.main.bounds.width, height: getCameraViewHeight())
+            .padding(.top, aspectRatio == .ratio1_1 ? 85 : 5)
+            .zIndex(0)
+            
+            // Overlay your image or loading view
+            if let image = image, isLoading == false {
                 VStack {
-                    if let image = image, isLoading == false {
-                        Image(uiImage: image)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .clipped()
-                    } else {
-                        LoadingView()
-                    }
-                    
-                }.overlay(
-                    CameraView(image: $image,
-                               cube: $cubeSelected,
-                               isStopCamera: $isStopCamera,
-                               isFrontCamera: $isFrontCamera,
-                               isFlashOn: $isFlashOn)
-                                .padding()
-                                .allowsHitTesting(false)
-                )
-                .frame(width: UIScreen.main.bounds.width, height: getCameraViewHeight())
-                .padding(.top, aspectRatio == .ratio1_1 ? 85 : 5)
-                Spacer()
+                    Image(uiImage: image)
+                        .resizable()
+                        .frame(width: UIScreen.main.bounds.width, height: getCameraViewHeight())
+                        .clipped()
+                        .zIndex(1)
+                        .onTapGesture { location in
+                            focusPoint = location // Set the focus point based on tap location
+                            setFocusPoint(location)
+                            showFocusIndicator = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                showFocusIndicator = false // Hide after delay
+                            }
+                        }
+                    Spacer()
+                }
+            } else {
+                LoadingView()
+                    .zIndex(1)
             }
             VStack(alignment: .center) {
                 HStack {
                     // Flash button (left icon)
                     Button(action: {
-                       
+                        isZoomSliderVisible.toggle()
                     }) {
 
-                        Text("Photo")
+                        Text("Zoom")
                             .font(.system(size: 13, weight: .regular, design: .monospaced))
-                            .foregroundColor(isEditPhoto ? .yellow :.white)
+                            .foregroundColor(isZoomSliderVisible ? .yellow :.white)
                         
                     }
                     .frame(width: 50, height: 50)
@@ -114,7 +131,38 @@ struct CameraApplyView: View {
                     }
                     .frame(width: 50, height: 50)
                 }
+                .background(.black)
+                if isZoomSliderVisible {
+                    Slider(value: $zoomFactor, in: 1...maxAvailableZoomFactor(), step: 0.1)
+                        .accentColor(.gold)
+                        .padding(.horizontal, 20)
+                        .onChange(of: zoomFactor) { newValue in
+                            let generator = UIImpactFeedbackGenerator(style: .light)
+                            generator.impactOccurred()
+                        }
+                        .transition(.move(edge: .bottom))
+                }
                 Spacer()
+                Button {
+                    // MARK: -- zoom 1x, 2x
+                    isZoom.toggle()
+                    if isZoom {
+                        zoomFactor = 2
+                    } else {
+                        zoomFactor = 1
+                    }
+                    
+                } label: {
+                    Text(isZoom  ? "2x" : "1x")
+                        .font(.system(size: 13, weight: .semibold, design: .monospaced))
+                        .foregroundStyle(.white)
+                        .frame(width: 30, height: 30)
+                        .background(Color.yellow.opacity(0.5))
+                        .cornerRadius(15)
+                }
+                .frame(width: 50, height: 50)
+                
+                // MARK: -- filter
                 if isSelectRatio == false {
                     VStack {
                         ScrollView(.horizontal, showsIndicators: false) {
@@ -197,7 +245,7 @@ struct CameraApplyView: View {
                     
                 }
                 
-                
+                //MARK: --control action menu
                 HStack {
                     // Left section with the first button
                     HStack {
@@ -282,13 +330,23 @@ struct CameraApplyView: View {
                 
             }
             .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: .infinity, alignment: .top)
-            
             .onChange(of: aspectRatio) {  newValue in
                 withAnimation {
                     isSelectRatio.toggle()
                 }
                 
             }
+            
+            // Focus indicator circle
+            if let focusPoint = focusPoint, showFocusIndicator {
+                Circle()
+                    .stroke(Color.white.opacity(0.5), lineWidth: 2) // Yellow border only
+                    .frame(width: 50, height: 50)
+                    .position(focusPoint)
+                    .transition(.scale)
+                    .animation(.easeInOut(duration: 0.3), value: showFocusIndicator)
+            }
+            
             if isCountingDown {
                 Text("\(countdownTime)")
                     .font(.system(size: 140, weight: .regular))
@@ -330,6 +388,23 @@ struct CameraApplyView: View {
         })
         .sheet(isPresented: $isSelectedPhoto, onDismiss: loadImage) {
             CymeImagePicker(image: $inputImage, sourceType: sourceType)
+        }
+    }
+    
+    func maxAvailableZoomFactor() -> CGFloat {
+        // Assuming you have access to the current device
+        if let device = AVCaptureDevice.default(for: .video) {
+            return min(device.activeFormat.videoMaxZoomFactor, 6.0) // Limit to 6x or as desired
+        }
+        return 1.0
+    }
+    
+    private func setFocusPoint(_ point: CGPoint) {
+        if let device = AVCaptureDevice.default(for: .video), device.isFocusPointOfInterestSupported {
+            try? device.lockForConfiguration()
+            device.focusPointOfInterest = point
+            device.focusMode = .autoFocus
+            device.unlockForConfiguration()
         }
     }
     
@@ -393,6 +468,16 @@ struct CameraApplyView: View {
         let orientation = self.getCorrectImageOrientation()
         let imageOrientation = UIImage(cgImage: image.cgImage!, scale: 1, orientation: orientation)
         AppState.shared.photoEdit = cropImageToAspectRatio(image: imageOrientation, aspectRatio: aspectRatio)
+        
+        
+        // Log filter usage event to Firebase Analytics
+        if let cube = cubeSelected {
+            Analytics.logEvent("filter_applied", parameters: [
+                "filter_name": cube.name,
+                "filter_type": cube.name.contains("BW") ? "black_and_white" : "retro"
+            ])
+            
+        }
     }
     
     func getCorrectImageOrientation() -> UIImage.Orientation {

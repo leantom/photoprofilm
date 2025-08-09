@@ -7,49 +7,48 @@
 
 import Foundation
 import UIKit
-import FirebaseStorage
 import SwiftUI
 import PixelEnginePackage
 import AVFoundation
 import CoreMedia
 import Vision
 import VideoToolbox
-
-func uploadImageToFirebase(image: UIImage, imageName: String, completion: @escaping (Result<String, Error>) -> Void) {
-    // Convert the UIImage to JPEG data with compression quality
-    guard let imageData = image.jpegData(compressionQuality: 0.8) else {
-        completion(.failure(NSError(domain: "ImageConversion", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to convert UIImage to JPEG"])))
-        return
-    }
-    
-    // Create a reference to Firebase Storage
-    let storageRef = Storage.storage().reference().child("images/\(imageName).jpg")
-    
-    // Upload the image data to Firebase Storage
-    let metadata = StorageMetadata()
-    metadata.contentType = "image/jpeg"
-    
-    storageRef.putData(imageData, metadata: metadata) { metadata, error in
-        if let error = error {
-            // Handle error
-            print(error.localizedDescription)
-            completion(.failure(error))
-        } else {
-            // Get the download URL
-            storageRef.downloadURL { url, error in
-                if let error = error {
-                    print(error.localizedDescription)
-                    completion(.failure(error))
-                } else if let downloadURL = url {
-                    // Return the download URL as a string
-                    print(downloadURL)
-                    completion(.success(downloadURL.absoluteString))
-                }
-            }
-        }
-    }
-}
-
+//
+//func uploadImageToFirebase(image: UIImage, imageName: String, completion: @escaping (Result<String, Error>) -> Void) {
+//    // Convert the UIImage to JPEG data with compression quality
+//    guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+//        completion(.failure(NSError(domain: "ImageConversion", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to convert UIImage to JPEG"])))
+//        return
+//    }
+//    
+//    // Create a reference to Firebase Storage
+//    let storageRef = Storage.storage().reference().child("images/\(imageName).jpg")
+//    
+//    // Upload the image data to Firebase Storage
+//    let metadata = StorageMetadata()
+//    metadata.contentType = "image/jpeg"
+//    
+//    storageRef.putData(imageData, metadata: metadata) { metadata, error in
+//        if let error = error {
+//            // Handle error
+//            print(error.localizedDescription)
+//            completion(.failure(error))
+//        } else {
+//            // Get the download URL
+//            storageRef.downloadURL { url, error in
+//                if let error = error {
+//                    print(error.localizedDescription)
+//                    completion(.failure(error))
+//                } else if let downloadURL = url {
+//                    // Return the download URL as a string
+//                    print(downloadURL)
+//                    completion(.success(downloadURL.absoluteString))
+//                }
+//            }
+//        }
+//    }
+//}
+//
 
 extension UIImage{
     

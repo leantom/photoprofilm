@@ -21,6 +21,7 @@ import Vision
 import PixelEnginePackage
 import GoogleMobileAds
 import Mantis
+import Firebase
 
 struct EditPhotoCameraView: View {
     @State private var image: UIImage?
@@ -361,6 +362,13 @@ struct EditPhotoCameraView: View {
        
         self.image = newImage
         self.afterFilterImage = newImage
+        
+        
+        // Log filter usage event to Firebase Analytics
+        Analytics.logEvent("filter_applied", parameters: [
+            "filter_name": cube.name,
+            "filter_type": cube.name.contains("BW") ? "black_and_white" : "retro"
+        ])
     }
     
     func applyPhotoToRetro(ciiImage: CIImage) -> UIImage? {

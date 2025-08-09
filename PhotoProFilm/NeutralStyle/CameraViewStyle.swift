@@ -25,6 +25,7 @@ struct CameraView: UIViewRepresentable {
     @Binding var isStopCamera: Bool
     @Binding var isFrontCamera: Bool
     @Binding var isFlashOn: Bool
+    @Binding  var zoomFactor: CGFloat
     
     var listBW: [BWFilter] = [classicBW, highContrastBW, softDreamyBW, moodyDarkBW, filmNoirBW, filmNoirBW2]
     func makeCoordinator() -> Coordinator {
@@ -37,7 +38,10 @@ struct CameraView: UIViewRepresentable {
         // Set up the preview layer
         context.coordinator.previewLayer.frame = view.bounds
         view.layer.addSublayer(context.coordinator.previewLayer)
-        
+        view.isUserInteractionEnabled = true
+        // Add tap gesture recognizer
+        let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handleTap(_:)))
+        view.addGestureRecognizer(tapGesture)
         // Start the camera session
         DispatchQueue.main.async {
             context.coordinator.startCamera(isFrontCamera: isFrontCamera) // Start the camera on the main thread
@@ -61,7 +65,12 @@ struct CameraView: UIViewRepresentable {
             context.coordinator.switchCamera(isFrontCamera: isFrontCamera)
         }
         context.coordinator.toggleFlash(isOn: isFlashOn)
+        // MARK: -- set zoom factor
         
+        // Set zoom factor
+        if context.coordinator.zoomFactor != zoomFactor {
+            context.coordinator.setZoomFactor(zoomFactor)
+        }
     }
     
     class Coordinator: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -76,7 +85,9 @@ struct CameraView: UIViewRepresentable {
         var isFlasOn: Bool = false
         var motionManager: CMMotionManager!
         var currentOrientation: UIDeviceOrientation = .portrait
-        
+       
+        weak var previewView: CameraPreviewView?
+        var zoomFactor: CGFloat = 1.0
         init(parent: CameraView) {
             self.parent = parent
             super.init()
@@ -117,7 +128,55 @@ struct CameraView: UIViewRepresentable {
             }
             
             captureSession.commitConfiguration()
+            
+            DispatchQueue.main.async {
+                self.previewView?.configure(session: self.captureSession, device: self.currentDevice!)
+            }
         }
+        
+        @objc func handlePinch(_ pinch: UIPinchGestureRecognizer) {
+            guard let device = currentDevice else { return }
+            
+            // Only adjust zoom when the gesture state is changed or ended
+            if pinch.state == .changed || pinch.state == .ended {
+                do {
+                    try device.lockForConfiguration()
+                    
+                    // Calculate the new zoom factor
+                    var zoomFactor = device.videoZoomFactor * pinch.scale
+                    // Clamp the zoom factor to the device's permissible zoom range
+                    zoomFactor = max(1.0, min(zoomFactor, device.activeFormat.videoMaxZoomFactor))
+                    
+                    device.videoZoomFactor = zoomFactor
+                    device.unlockForConfiguration()
+                } catch {
+                    print("Error locking configuration: \(error)")
+                }
+                
+                // Reset the pinch scale to 1.0 to recognize incremental changes
+                pinch.scale = 1.0
+            }
+        }
+        
+        @objc func handleTap(_ gestureRecognizer: UITapGestureRecognizer) {
+            let location = gestureRecognizer.location(in: gestureRecognizer.view)
+            print(location)
+            // Convert the touch location to camera coordinates and set focus and exposure
+            // focus(at: location)
+        }
+        
+        func setZoomFactor(_ zoomFactor: CGFloat) {
+                guard let device = currentDevice else { return }
+                do {
+                    try device.lockForConfiguration()
+                    let maxZoomFactor = min(device.activeFormat.videoMaxZoomFactor, 6.0) // Adjust max zoom if desired
+                    device.videoZoomFactor = max(1.0, min(zoomFactor, maxZoomFactor))
+                    device.unlockForConfiguration()
+                    self.zoomFactor = device.videoZoomFactor
+                } catch {
+                    print("Error locking configuration: \(error)")
+                }
+            }
         
         func switchCamera(isFrontCamera: Bool) {
             stopCamera()
@@ -174,6 +233,18 @@ struct CameraView: UIViewRepresentable {
         func stopCamera() {
             if captureSession.isRunning {
                 captureSession.stopRunning()
+            }
+        }
+        
+        func setZoomFactor(to factor: CGFloat) {
+            guard let captureDevice = AVCaptureDevice.default(for: .video) else { return }
+
+            do {
+                try captureDevice.lockForConfiguration()
+                captureDevice.videoZoomFactor = max(1.0, min(factor, captureDevice.activeFormat.videoMaxZoomFactor)) // Ensure the zoom is within bounds
+                captureDevice.unlockForConfiguration()
+            } catch {
+                print("Failed to set zoom factor: \(error)")
             }
         }
         

@@ -1,23 +1,24 @@
 import SwiftUI
 import NavigationTransitions
+import Firebase
 
 struct PagerView<Content: View>: View {
     @Binding var currentPage: Int
     let pageCount: Int
     let content: Content
-
+    
     init(currentPage: Binding<Int>, pageCount: Int, @ViewBuilder content: () -> Content) {
         self._currentPage = currentPage
         self.pageCount = pageCount
         self.content = content()
     }
-
+    
     @GestureState private var dragOffset: CGFloat = 0
-
+    
     var body: some View {
         GeometryReader { geometry in
             let width = geometry.size.width
-
+            
             HStack(spacing: 0) {
                 content
                     .frame(width: width)
@@ -87,18 +88,18 @@ struct SplashScreenView: View {
                         .fontWidth(.condensed)
                     // Buttons
                     HStack(spacing: 20) {
-//                        Button(action: {
-//                            //MARK: -- Skip action
-//                            actionStart()
-//                        }) {
-//                            Text("Skip")
-//                                .padding()
-//                                .frame(maxWidth: .infinity)
-//                                .background(Color.purple.opacity(0.3))
-//                                .foregroundColor(.white)
-//                                .fontWidth(.condensed)
-//                                .cornerRadius(10)
-//                        }
+                        //                        Button(action: {
+                        //                            //MARK: -- Skip action
+                        //                            actionStart()
+                        //                        }) {
+                        //                            Text("Skip")
+                        //                                .padding()
+                        //                                .frame(maxWidth: .infinity)
+                        //                                .background(Color.purple.opacity(0.3))
+                        //                                .foregroundColor(.white)
+                        //                                .fontWidth(.condensed)
+                        //                                .cornerRadius(10)
+                        //                        }
                         
                         Button(action: {
                             // Next action
@@ -136,11 +137,11 @@ struct WrapperSplashScreen: View {
         SplashScreen(imageName: "cinematic", title: "Retro Creativity Unleashed", description: "Dive into a world of retro-inspired tools. Use our AI toolbox to give your photos a vintage touch and showcase your artistic flair.", buttonText: "Next", typeSplash: .skip),
         SplashScreen(imageName: "avatar", title: "Renaissance of Photography", description: "Explore the Renaissance style for your photography. Use advanced features to create inspiring works of art.", buttonText: "Get Started", typeSplash: .start)
     ]
-
+    
     @State private var currentPage = 0
     @Binding var path: NavigationPath
     @ObservedObject var appState: AppState
-
+    
     var body: some View {
         PagerView(currentPage: $currentPage, pageCount: splashScreens.count) {
             ForEach(0..<splashScreens.count, id: \.self) { index in
@@ -149,7 +150,14 @@ struct WrapperSplashScreen: View {
                     actionStart: {
                         appState.isLogined = AppSetting.checkLogined()
                         AppSetting.setFirstLogined(value: false)
-                        path.append("Login")
+                        path.append("photo")
+                        Task {
+                            LoginViewModel.shared.signinNotSyncWithAnynomous()
+                        }
+                        // Log the event when the user starts the app
+                        Analytics.logEvent("app_started", parameters: [
+                            "screen_title": splashScreens[index].title
+                        ])
                     },
                     actionNext: {
                         withAnimation {
@@ -158,8 +166,15 @@ struct WrapperSplashScreen: View {
                             } else {
                                 appState.isLogined = AppSetting.checkLogined()
                                 AppSetting.setFirstLogined(value: false)
-                                path.append("Login")
+                                path.append("photo")
+                                Task {
+                                    LoginViewModel.shared.signinNotSyncWithAnynomous()
+                                }
                             }
+                            // Log the event when the user moves to the next splash screen
+                            Analytics.logEvent("splash_screen_navigated", parameters: [
+                                "screen_title": splashScreens[index].title
+                            ])
                         }
                     }
                 )
